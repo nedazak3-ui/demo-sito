@@ -101,7 +101,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* PIANI DI ABBONAMENTO CON FLIP EFFECT */}
+        {/* PIANI DI ABBONAMENTO CON FLIP EFFECT E FIX ALLINEAMENTO */}
         <section id="pricing" style={s.section}>
           <h2 style={s.secTitle}>PIANI DI <span className="stroke-text">ABBONAMENTO</span></h2>
           <div style={s.bentoGrid}>
@@ -142,12 +142,26 @@ export default function App() {
               </div>
             </div>
 
-            <div className="glass-card" style={s.bentoItem}>
-              <div style={s.icon}>🛸</div>
-              <h3>CUSTOM AI</h3>
-              <div style={{fontSize: '2.5rem', fontWeight: 'bold', margin: '20px 0', color: '#00d4ff'}}>PREVENTIVO</div>
-              <button style={{...s.primaryBtn, padding: '15px', width: '100%', fontSize: '1rem'}}>CONTATTACI</button>
+            {/* CARTA CUSTOM AI CON ALLINEAMENTO FIXATO E FLIP EFFECT */}
+            <div className={`flip-card ${flippedCard === 'custom' ? 'active' : ''}`} style={s.cardContainer}>
+              <div className="flip-card-inner">
+                {/* FRONTE: Ora perfettamente allineato al centro come gli altri */}
+                <div className="flip-card-front glass-card" style={s.bentoItem}>
+                  <div style={s.icon}>🛸</div>
+                  <h3>CUSTOM AI</h3> {/* Allineato e con la dimensione corretta */}
+                  <div style={{fontSize: '2.5rem', fontWeight: 'bold', margin: '20px 0', color: '#00d4ff'}}>PREVENTIVO</div> {/* Allineato e con la dimensione corretta */}
+                  <button style={{...s.primaryBtn, padding: '15px', width: '100%', fontSize: '1rem'}} onClick={() => setFlippedCard('custom')}>CONTATTACI</button>
+                </div>
+                {/* RETRO: Spiegazione del servizio Custom */}
+                <div className="flip-card-back glass-card" style={s.bentoItem}>
+                  <h3 style={{color: '#00d4ff'}}>PROGETTO SU MISURA</h3>
+                  <p style={{fontSize: '0.9rem', opacity: 0.8, textAlign: 'left'}}>Integrazione di Intelligenza Artificiale personalizzata, dashboard analitiche avanzate e scalabilità infinita. Soluzione creata interamente sulle tue specifiche necessità.</p>
+                  <button style={{...s.primaryBtn, padding: '15px', width: '100%', marginBottom: '10px'}} onClick={() => window.location.href = 'mailto:contatto@webcraft.site?subject=Preventivo Custom AI'}>CONTATTACI ORA</button>
+                  <button style={{background: 'none', border: '1px solid #fff', color: '#fff', padding: '10px', borderRadius: '50px', cursor: 'pointer', width: '100%'}} onClick={() => setFlippedCard(null)}>INDIETRO</button>
+                </div>
+              </div>
             </div>
+
           </div>
         </section>
 
@@ -164,7 +178,7 @@ export default function App() {
         .flip-card { perspective: 1000px; min-height: 400px; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card.active .flip-card-inner { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 40px; display: flex; flex-direction: column; justify-content: center; padding: 40px; }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 40px; display: flex; flex-direction: column; justify-content: center; padding: 40px; box-sizing: border-box; } /* Aggiunto box-sizing */
         .flip-card-back { transform: rotateY(180deg); background: rgba(0, 212, 255, 0.05) !important; }
         .scene { width: 200px; height: 200px; perspective: 600px; margin: 40px auto; }
         .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: rotateCube 15s infinite linear; }
@@ -179,7 +193,7 @@ export default function App() {
         @keyframes warp { 0% { transform: translateZ(-1000px); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateZ(500px); opacity: 0; } }
         .starburst { position: absolute; background: white; border-radius: 50%; box-shadow: 0 0 10px #00d4ff; animation: warp infinite linear; }
         .stroke-text { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.4); }
-        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px; transition: 0.4s; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px; transition: 0.4s; width: 100%; } /* Assicurato larghezza 100% */
         .mega-cta { text-align: center; border: 1px solid #00d4ff; }
       `}</style>
     </div>
@@ -195,11 +209,11 @@ const s = {
   mainTitle: { fontSize: 'clamp(3rem, 10vw, 7rem)', fontWeight: '900', lineHeight: '0.85', marginBottom: '30px' },
   gradientText: { background: 'linear-gradient(to right, #fff, #00d4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
   heroSub: { fontSize: '1.2rem', color: '#aaa', maxWidth: '750px', margin: '0 auto 40px' },
-  primaryBtn: { background: '#fff', color: '#000', border: 'none', padding: '20px 50px', fontSize: '1.1rem', fontWeight: '900', borderRadius: '100px', cursor: 'pointer', boxShadow: '0 0 30px rgba(0,212,255,0.3)' },
+  primaryBtn: { background: '#fff', color: '#000', border: 'none', padding: '20px 50px', fontSize: '1.1rem', fontWeight: '900', borderRadius: '100px', cursor: 'pointer', boxShadow: '0 0 30px rgba(255,255,255,0.3)' },
   section: { padding: '100px 0' },
   secTitle: { fontSize: 'clamp(2rem, 5vw, 4rem)', textAlign: 'center', marginBottom: '80px', fontWeight: '900' },
   bentoGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' },
-  bentoItem: { display: 'flex', flexDirection: 'column', gap: '15px' },
+  bentoItem: { display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }, // Assicurato alignItems: 'center'
   icon: { fontSize: '2.5rem' },
   ctaSection: { paddingBottom: '150px' }
 };
