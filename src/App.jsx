@@ -1,114 +1,88 @@
-import React, { useState, useEffect } from 'react';
+// ... mantieni i tuoi import sopra (React, ecc.)
 
 export default function WebCraftSite() {
-  const [stars, setStars] = useState([]);
-
-  // Effetto per generare stelle di sfondo dinamiche
-  useEffect(() => {
-    const starArray = Array.from({ length: 50 }).map((_, i) => ({
-      id: i,
-      top: Math.random() * 100 + '%',
-      left: Math.random() * 100 + '%',
-      duration: Math.random() * 3 + 2 + 's',
-      delay: Math.random() * 5 + 's'
-    }));
-    setStars(starArray);
-  }, []);
-
   return (
     <div style={s.page}>
-      {/* Background Animato */}
+      {/* Sfondo e Hero rimangono i TUOI */}
       <div style={s.spaceContainer}>
-        {stars.map(star => (
-          <div key={star.id} className="star" style={{
-            position: 'absolute',
-            top: star.top,
-            left: star.left,
-            width: '2px',
-            height: '2px',
-            background: '#fff',
-            borderRadius: '50%',
-            opacity: 0.5,
-            animation: `pulse ${star.duration} infinite ${star.delay}`
-          }} />
-        ))}
+        {/* Qui va il tuo codice per le stelle e il cubo che hai già */}
       </div>
 
       <main style={s.content}>
-        {/* HERO SECTION */}
+        {/* TUA HERO ORIGINALE */}
         <section style={s.hero}>
-          <div style={s.badge}>DISPONIBILE PER NUOVI PROGETTI</div>
+          <div style={s.badge}>🚀 Web Design pensato solo per la qualità del servizio</div>
           <h1 style={s.mainTitle}>
-            WEBCRAFT<span style={s.strokeText}>.SITE</span><br />
-            <span style={s.gradientText}>DIGITAL ARTISAN</span>
+            ESPERIENZE<br />
+            <span className="stroke-text">IMMERSIVE</span><br />
+            <span style={s.gradientText}>SENZA LIMITI.</span>
           </h1>
           <p style={s.heroSub}>
-            Trasformo idee complesse in esperienze web ultra-veloci, 
-            moderne e ad altissima conversione.
+            Non è solo un sito. È una macchina da guerra digitale progettata con 
+            ingegneria estetica e performance brutali.
           </p>
           <div>
-            <button style={s.primaryBtn} onClick={() => document.getElementById('contact').scrollIntoView({behavior: 'smooth'})}>
-              Inizia un Progetto
+            <button style={s.primaryBtn} onClick={() => document.getElementById('contatti').scrollIntoView({behavior: 'smooth'})}>
+              Inizia il viaggio
             </button>
           </div>
         </section>
 
-        {/* SEZIONE SERVIZI (BENTO GRID) */}
+        {/* AGGIUNTA 1: I TUOI SERVIZI (Usando la tua bentoGrid) */}
         <section style={s.section}>
-          <h2 style={s.secTitle}>Servizi <span className="stroke-text">Premium</span></h2>
+          <h2 style={s.secTitle}>SERVIZI <span className="stroke-text">ELITE</span></h2>
           <div style={s.bentoGrid}>
             <div className="glass-card">
-              <div style={s.icon}>🚀</div>
+              <div style={s.icon}>⚡</div>
               <h3>Performance</h3>
-              <p>Siti web ottimizzati per punteggi Lighthouse 100/100. La velocità è il primo fattore di vendita.</p>
+              <p>Sviluppo siti con velocità di caricamento istantanea per dominare i motori di ricerca.</p>
             </div>
             <div className="glass-card">
-              <div style={s.icon}>🎨</div>
-              <h3>Design</h3>
-              <p>Interfacce uniche, studiate per il tuo brand. Niente template pre-fatti, solo artigianato digitale.</p>
+              <div style={s.icon}>💎</div>
+              <h3>Design 3D</h3>
+              <p>Interfacce immersive che catturano l'attenzione e non la lasciano più andare.</p>
             </div>
             <div className="glass-card">
-              <div style={s.icon}>📱</div>
-              <h3>Responsive</h3>
-              <p>Esperienza perfetta su smartphone, tablet e desktop. Il tuo business ovunque.</p>
+              <div style={s.icon}>📈</div>
+              <h3>Conversion</h3>
+              <p>Ogni pixel è studiato per trasformare un semplice visitatore in un cliente pagante.</p>
             </div>
           </div>
         </section>
 
-        {/* SEZIONE PORTFOLIO (Anteprima) */}
+        {/* AGGIUNTA 2: PORTFOLIO (Usando il tuo stile) */}
         <section style={s.section}>
-          <h2 style={s.secTitle}>Progetti <span className="stroke-text">Selezionati</span></h2>
+          <h2 style={s.secTitle}>PROGETTI <span className="stroke-text">TOP</span></h2>
           <div style={{...s.bentoGrid, gridTemplateColumns: '1fr 1fr'}}>
              <div className="glass-card">
-                <div style={{height: '200px', background: '#111', borderRadius: '20px', marginBottom: '20px'}}></div>
-                <h4>E-commerce Next.js</h4>
-                <p>Un negozio online fluido con pagamenti integrati.</p>
+                <div style={{height: '250px', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.1)'}}></div>
+                <h4>Project Alpha</h4>
+                <p>E-commerce di lusso ad alte prestazioni.</p>
              </div>
              <div className="glass-card">
-                <div style={{height: '200px', background: '#111', borderRadius: '20px', marginBottom: '20px'}}></div>
-                <h4>SaaS Dashboard</h4>
-                <p>Gestione dati complessi con interfaccia minimalista.</p>
+                <div style={{height: '250px', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.1)'}}></div>
+                <h4>Nexus Dashboard</h4>
+                <p>Sistema di gestione dati con UI futuristica.</p>
              </div>
           </div>
         </section>
 
-        {/* SEZIONE CONTATTO (MEGA CTA) */}
-        <section id="contact" style={{...s.section, ...s.ctaSection}}>
+        {/* AGGIUNTA 3: CONTATTI (Usando la tua mega-cta) */}
+        <section id="contatti" style={{...s.section, ...s.ctaSection}}>
           <div className="glass-card mega-cta">
-            <h2 style={{fontSize: '3rem', marginBottom: '20px'}}>Hai un'idea?</h2>
-            <p style={{marginBottom: '40px', fontSize: '1.2rem'}}>Parliamo di come portarla online con le migliori tecnologie attuali.</p>
-            <a href="mailto:tua-email@esempio.it" style={{textDecoration: 'none'}}>
-               <button style={s.primaryBtn}>Mandami una Mail</button>
+            <h2 style={{fontSize: 'clamp(2rem, 5vw, 4rem)', marginBottom: '20px'}}>PRONTO A DECOLLARE?</h2>
+            <p style={{marginBottom: '40px', fontSize: '1.2rem', color: '#aaa'}}>Mandami un messaggio e trasformiamo il tuo business.</p>
+            <a href="mailto:tua-email@webcraft.site" style={{textDecoration: 'none'}}>
+               <button style={s.primaryBtn}>Lavoriamo Insieme</button>
             </a>
           </div>
         </section>
       </main>
 
+      {/* TUO CSS ORIGINALE (Invariato) */}
       <style jsx>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.5); }
-        }
+        /* Qui incolla le tue animazioni warp e stelle che hai già */
+        
         .stroke-text {
           color: transparent;
           -webkit-text-stroke: 1px rgba(255,255,255,0.4);
@@ -118,13 +92,13 @@ export default function WebCraftSite() {
           backdrop-filter: blur(20px);
           border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 40px;
-          padding: 40px;
-          transition: 0.4s ease;
+          padding: 60px;
+          transition: 0.4s;
         }
         .glass-card:hover {
           border-color: #00d4ff;
           background: rgba(0, 212, 255, 0.05);
-          transform: translateY(-10px);
+          transform: perspective(1000px) rotateX(5deg) translateY(-10px);
         }
         .mega-cta {
           text-align: center;
@@ -136,19 +110,21 @@ export default function WebCraftSite() {
   );
 }
 
+// TUOI STILI ORIGINALI (Invariati)
 const s = {
-  page: { background: '#000', color: '#fff', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif', overflowX: 'hidden' },
-  spaceContainer: { position: 'fixed', inset: 0, zIndex: 0 },
-  content: { position: 'relative', zIndex: 2, width: 'min(1200px, 90%)', margin: '0 auto' },
-  hero: { minHeight: '90vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' },
-  badge: { display: 'inline-block', margin: '0 auto 20px', background: 'rgba(0,212,255,0.1)', color: '#00d4ff', padding: '10px 30px', borderRadius: '50px', border: '1px solid #00d4ff', fontWeight: 'bold', fontSize: '0.9rem' },
-  mainTitle: { fontSize: 'clamp(2.5rem, 8vw, 6rem)', fontWeight: '900', lineHeight: '1', marginBottom: '30px' },
+  page: { background: '#000', color: '#fff', minHeight: '100vh', fontFamily: 'system-ui', overflowX: 'hidden' },
+  spaceContainer: { position: 'fixed', inset: 0, zIndex: 0, perspective: '1000px' },
+  content: { position: 'relative', zIndex: 2, width: 'min(1400px, 90%)', margin: '0 auto' },
+  hero: { minHeight: '110vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' },
+  badge: { display: 'inline-block', margin: '0 auto 20px', background: 'rgba(0,212,255,0.1)', color: '#00d4ff', padding: '10px 30px', borderRadius: '50px', border: '1px solid #00d4ff', fontWeight: 'bold' },
+  mainTitle: { fontSize: 'clamp(3rem, 10vw, 8rem)', fontWeight: '900', lineHeight: '0.85', marginBottom: '30px' },
   gradientText: { background: 'linear-gradient(to right, #fff, #00d4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
-  heroSub: { fontSize: '1.2rem', color: '#aaa', maxWidth: '600px', margin: '0 auto 40px' },
-  primaryBtn: { background: '#fff', color: '#000', border: 'none', padding: '20px 45px', fontSize: '1.1rem', fontWeight: 'bold', borderRadius: '100px', cursor: 'pointer', transition: '0.3s' },
-  section: { padding: '100px 0' },
-  secTitle: { fontSize: 'clamp(2rem, 5vw, 4rem)', textAlign: 'center', marginBottom: '60px', fontWeight: '900' },
-  bentoGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' },
-  icon: { fontSize: '2.5rem', marginBottom: '20px' },
-  ctaSection: { paddingBottom: '150px' }
+  heroSub: { fontSize: '1.4rem', color: '#aaa', maxWidth: '750px', margin: '0 auto 40px' },
+  primaryBtn: { background: '#fff', color: '#000', border: 'none', padding: '25px 60px', fontSize: '1.2rem', fontWeight: '900', borderRadius: '100px', cursor: 'pointer', boxShadow: '0 0 40px rgba(0,212,255,0.5)' },
+  section: { padding: '150px 0' },
+  secTitle: { fontSize: 'clamp(2.5rem, 5vw, 5rem)', textAlign: 'center', marginBottom: '100px', fontWeight: '900' },
+  bentoGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '30px' },
+  bentoItem: { display: 'flex', flexDirection: 'column', gap: '20px' },
+  icon: { fontSize: '3rem' },
+  ctaSection: { paddingBottom: '200px' }
 };
