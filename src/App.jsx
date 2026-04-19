@@ -1,88 +1,175 @@
-// ... mantieni i tuoi import sopra (React, ecc.)
+import React from "react";
 
-export default function WebCraftSite() {
+export default function App() {
+  const stars = Array.from({ length: 120 }).map((_, i) => ({
+    id: i,
+    top: `${Math.random() * 100}%`,
+    left: `${Math.random() * 100}%`,
+    duration: `${Math.random() * 3 + 2}s`,
+    size: `${Math.random() * 2 + 1}px`
+  }));
+
   return (
     <div style={s.page}>
-      {/* Sfondo e Hero rimangono i TUOI */}
+      {/* SFONDO WARP VELOCITÀ LUCE */}
       <div style={s.spaceContainer}>
-        {/* Qui va il tuo codice per le stelle e il cubo che hai già */}
+        {stars.map((star) => (
+          <div key={star.id} className="starburst" style={{
+            ...s.star,
+            top: star.top,
+            left: star.left,
+            width: star.size,
+            height: star.size,
+            animationDuration: star.duration,
+          }} />
+        ))}
       </div>
 
-      <main style={s.content}>
-        {/* TUA HERO ORIGINALE */}
+      <div style={s.content}>
+        {/* HERO SECTION CON CUBO 3D GEOMETRICO */}
         <section style={s.hero}>
-          <div style={s.badge}>🚀 Web Design pensato solo per la qualità del servizio</div>
+          <div className="reveal" style={s.badge}>
+            🚀 Web Design pensato solo per la qualità del servizio
+          </div>
+
+          <div className="scene">
+            <div className="cube">
+              <div className="face front">WEBCRAFT</div>
+              <div className="face back">FUTURE</div>
+              <div className="face right">DESIGN</div>
+              <div className="face left">IMPACT</div>
+              <div className="face top">3D</div>
+              <div className="face bottom">CODE</div>
+            </div>
+          </div>
+
           <h1 style={s.mainTitle}>
-            ESPERIENZE<br />
-            <span className="stroke-text">IMMERSIVE</span><br />
+            ESPERIENZE <br />
+            <span className="stroke-text">IMMERSIVE</span> <br />
             <span style={s.gradientText}>SENZA LIMITI.</span>
           </h1>
+          
           <p style={s.heroSub}>
-            Non è solo un sito. È una macchina da guerra digitale progettata con 
-            ingegneria estetica e performance brutali.
+            Non è solo un sito. È una macchina da guerra digitale progettata 
+            con ingegneria estetica e performance brutali.
           </p>
-          <div>
-            <button style={s.primaryBtn} onClick={() => document.getElementById('contatti').scrollIntoView({behavior: 'smooth'})}>
-              Inizia il viaggio
-            </button>
-          </div>
+
+          <button style={s.primaryBtn} onClick={() => document.getElementById('contatti').scrollIntoView({behavior: 'smooth'})}>
+            SCATENA IL POTENZIALE
+          </button>
         </section>
 
-        {/* AGGIUNTA 1: I TUOI SERVIZI (Usando la tua bentoGrid) */}
+        {/* SECTION 2: GRID INTERATTIVA */}
         <section style={s.section}>
-          <h2 style={s.secTitle}>SERVIZI <span className="stroke-text">ELITE</span></h2>
+          <h2 style={s.secTitle}>L'Ingegneria del Successo</h2>
           <div style={s.bentoGrid}>
-            <div className="glass-card">
-              <div style={s.icon}>⚡</div>
-              <h3>Performance</h3>
-              <p>Sviluppo siti con velocità di caricamento istantanea per dominare i motori di ricerca.</p>
+            <div className="glass-card" style={{...s.bentoItem, gridColumn: 'span 2'}}>
+              <div style={s.icon}>🌐</div>
+              <h3>Ecosistemi Digitali</h3>
+              <p>Creiamo mondi, non semplici pagine. Ogni interazione è studiata per lasciare l'utente a bocca aperta.</p>
             </div>
-            <div className="glass-card">
-              <div style={s.icon}>💎</div>
-              <h3>Design 3D</h3>
-              <p>Interfacce immersive che catturano l'attenzione e non la lasciano più andare.</p>
+            <div className="glass-card" style={s.bentoItem}>
+              <div style={s.icon}>🛡️</div>
+              <h3>Sicurezza Elite</h3>
+              <p>Codice blindato e infrastrutture cloud ultra-sicure.</p>
             </div>
-            <div className="glass-card">
-              <div style={s.icon}>📈</div>
-              <h3>Conversion</h3>
-              <p>Ogni pixel è studiato per trasformare un semplice visitatore in un cliente pagante.</p>
+            <div className="glass-card" style={s.bentoItem}>
+              <div style={s.icon}>☄️</div>
+              <h3>Interfacce 3D</h3>
+              <p>Navigazione spaziale che distrugge la concorrenza.</p>
+            </div>
+            <div className="glass-card" style={{...s.bentoItem, gridColumn: 'span 2'}}>
+              <div style={s.icon}>🤖</div>
+              <h3>AI Integration</h3>
+              <p>Sistemi intelligenti che automatizzano il tuo business mentre dormi.</p>
             </div>
           </div>
         </section>
 
-        {/* AGGIUNTA 2: PORTFOLIO (Usando il tuo stile) */}
+        {/* AGGIUNTA: SEZIONE PORTFOLIO (Sempre stile Glassmorphism) */}
         <section style={s.section}>
-          <h2 style={s.secTitle}>PROGETTI <span className="stroke-text">TOP</span></h2>
+          <h2 style={s.secTitle}>Progetti <span className="stroke-text">Selezionati</span></h2>
           <div style={{...s.bentoGrid, gridTemplateColumns: '1fr 1fr'}}>
              <div className="glass-card">
-                <div style={{height: '250px', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.1)'}}></div>
-                <h4>Project Alpha</h4>
-                <p>E-commerce di lusso ad alte prestazioni.</p>
+                <div style={{height: '250px', background: 'rgba(0,212,255,0.05)', borderRadius: '20px', marginBottom: '20px', border: '1px solid rgba(0,212,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem'}}>📱</div>
+                <h4>Nexus E-commerce</h4>
+                <p>Un'esperienza di acquisto fluida con performance da record.</p>
              </div>
              <div className="glass-card">
-                <div style={{height: '250px', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.1)'}}></div>
-                <h4>Nexus Dashboard</h4>
-                <p>Sistema di gestione dati con UI futuristica.</p>
+                <div style={{height: '250px', background: 'rgba(0,212,255,0.05)', borderRadius: '20px', marginBottom: '20px', border: '1px solid rgba(0,212,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem'}}>💻</div>
+                <h4>SaaS Dashboard</h4>
+                <p>Interfaccia di controllo per sistemi cloud complessi.</p>
              </div>
           </div>
         </section>
 
-        {/* AGGIUNTA 3: CONTATTI (Usando la tua mega-cta) */}
-        <section id="contatti" style={{...s.section, ...s.ctaSection}}>
+        {/* CTA FINALE MONUMENTALE */}
+        <section id="contatti" style={s.ctaSection}>
           <div className="glass-card mega-cta">
-            <h2 style={{fontSize: 'clamp(2rem, 5vw, 4rem)', marginBottom: '20px'}}>PRONTO A DECOLLARE?</h2>
-            <p style={{marginBottom: '40px', fontSize: '1.2rem', color: '#aaa'}}>Mandami un messaggio e trasformiamo il tuo business.</p>
+            <h2 style={{fontSize: 'clamp(2rem, 6vw, 5rem)', fontWeight: 900}}>PRONTO A DOMINARE?</h2>
+            <p style={{fontSize: '1.5rem', opacity: 0.7, marginBottom: '40px'}}>La mediocrità non è un'opzione. Scegli l'eccellenza.</p>
             <a href="mailto:tua-email@webcraft.site" style={{textDecoration: 'none'}}>
-               <button style={s.primaryBtn}>Lavoriamo Insieme</button>
+               <button style={s.primaryBtn}>CONTATTACI ORA</button>
             </a>
           </div>
         </section>
-      </main>
+      </div>
 
-      {/* TUO CSS ORIGINALE (Invariato) */}
-      <style jsx>{`
-        /* Qui incolla le tue animazioni warp e stelle che hai già */
-        
+      <style>{`
+        /* CUBO 3D CSS */
+        .scene {
+          width: 200px;
+          height: 200px;
+          perspective: 600px;
+          margin: 40px auto;
+        }
+        .cube {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          transform-style: preserve-3d;
+          animation: rotateCube 15s infinite linear;
+        }
+        .face {
+          position: absolute;
+          width: 200px;
+          height: 200px;
+          border: 2px solid #00d4ff;
+          background: rgba(0, 212, 255, 0.1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 1.2rem;
+          color: #00d4ff;
+          backdrop-filter: blur(5px);
+        }
+        .front  { transform: rotateY(0deg) translateZ(100px); }
+        .back   { transform: rotateY(180deg) translateZ(100px); }
+        .right  { transform: rotateY(90deg) translateZ(100px); }
+        .left   { transform: rotateY(-90deg) translateZ(100px); }
+        .top    { transform: rotateX(90deg) translateZ(100px); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+        @keyframes rotateCube {
+          from { transform: rotateX(0deg) rotateY(0deg); }
+          to { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        /* STELLE 3D */
+        @keyframes warp {
+          0% { transform: translateZ(-1000px); opacity: 0; }
+          20% { opacity: 1; }
+          100% { transform: translateZ(500px); opacity: 0; }
+        }
+        .starburst {
+          position: absolute;
+          background: white;
+          border-radius: 50%;
+          box-shadow: 0 0 10px #00d4ff;
+          animation: warp infinite linear;
+        }
+
         .stroke-text {
           color: transparent;
           -webkit-text-stroke: 1px rgba(255,255,255,0.4);
@@ -110,7 +197,6 @@ export default function WebCraftSite() {
   );
 }
 
-// TUOI STILI ORIGINALI (Invariati)
 const s = {
   page: { background: '#000', color: '#fff', minHeight: '100vh', fontFamily: 'system-ui', overflowX: 'hidden' },
   spaceContainer: { position: 'fixed', inset: 0, zIndex: 0, perspective: '1000px' },
