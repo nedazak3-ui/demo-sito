@@ -4,11 +4,8 @@ import App from './App.jsx'
 import './index.css'
 import { ClerkProvider } from '@clerk/clerk-react'
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-
-if (!PUBLISHABLE_KEY) {
-  throw new Error("Errore: Manca la chiave di Clerk nel file .env.local")
-}
+// Usiamo direttamente la tua chiave qui per testare se è quello il problema
+const PUBLISHABLE_KEY = "pk_test_Y3VyaW91cy1yYXtNi5jbGVyay5hYzI$"
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
