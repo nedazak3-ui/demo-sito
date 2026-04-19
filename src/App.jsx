@@ -1,13 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useAuth } from "@clerk/clerk-react";
 
 export default function App() {
   const { isSignedIn } = useAuth();
+  
+  // STATI
   const [flippedCard, setFlippedCard] = useState(null);
-  const [activeFaq, setActiveFaq] = useState(null);
+  const [showLegal, setShowLegal] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  const [messages, setMessages] = useState([
+    { role: 'assistant', content: 'Sistemi Webcraft online. Sono l\'AI di supporto. Come posso aiutarti?' }
+  ]);
 
+  const chatEndRef = useRef(null);
+  const scrollToBottom = () => chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  useEffect(() => { scrollToBottom(); }, [messages]);
+
+  // LINKS STRIPE
   const LINK_STARTER = "https://buy.stripe.com/4gMeV61DwfrygKf0tC0sU00";
   const LINK_PRO = "https://buy.stripe.com/14AaEQ4PI4MU8dJb8g0sU01";
+
+  // LOGICA CHATBOT
+  const handleChat = (e) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+    const userMsg = { role: 'user', content: chatInput };
+    setMessages(prev => [...prev, userMsg]);
+    setChatInput("");
+
+    setTimeout(() => {
+      let reply = "I nostri sistemi stanno analizzando la tua richiesta. I pacchetti Webcraft includono design 3D e integrazione Stripe. Vuoi sapere di più sui costi?";
+      const input = chatInput.toLowerCase();
+      if (input.includes("prezzo") || input.includes("costa")) reply = "Starter: €499. Pro Business: €1.299. Custom AI: su preventivo.";
+      if (input.includes("tempo") || input.includes("consegna")) reply = "Landing Page in 7 giorni, E-commerce in 15-20 giorni.";
+      if (input.includes("chi") || input.includes("webcraft")) reply = "Siamo un'agenzia digitale d'élite specializzata in esperienze immersive e AI.";
+      setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
+    }, 800);
+  };
 
   const handlePurchase = (link) => {
     if (!isSignedIn) {
@@ -17,19 +47,10 @@ export default function App() {
     window.location.href = link;
   };
 
-  const stars = Array.from({ length: 120 }).map((_, i) => ({
-    id: i,
-    top: `${Math.random() * 100}%`,
-    left: `${Math.random() * 100}%`,
-    duration: `${Math.random() * 3 + 2}s`,
-    size: `${Math.random() * 2 + 1}px`
+  const stars = Array.from({ length: 100 }).map((_, i) => ({
+    id: i, top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`,
+    duration: `${Math.random() * 3 + 2}s`, size: `${Math.random() * 2 + 1}px`
   }));
-
-  const faqs = [
-    { q: "Quanto tempo richiede un progetto?", a: "Per il piano Starter consegniamo in 7 giorni lavorativi. Per il Pro Business circa 15-20 giorni." },
-    { q: "L'hosting è incluso?", a: "Sì, il primo anno di hosting ultra-veloce e certificato SSL è incluso in tutti i pacchetti." },
-    { q: "Posso aggiornare il sito da solo?", a: "Certamente. Con il piano Pro Business avrai accesso a una dashboard semplificata per gestire contenuti e prodotti." }
-  ];
 
   return (
     <div style={s.page}>
@@ -37,184 +58,192 @@ export default function App() {
       <nav style={s.navbar}>
         <div style={s.navContainer}>
           <div style={s.logo}>WEBCRAFT</div>
-          <div style={{display: 'flex', gap: '20px', alignItems: 'center'}}>
+          <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
             <SignedOut>
-              <SignInButton mode="modal">
-                <button style={s.loginBtn}>ACCEDI</button>
-              </SignInButton>
-              <SignUpButton mode="modal">
-                <button style={s.registerBtn}>REGISTRATI</button>
-              </SignUpButton>
+              <SignInButton mode="modal"><button style={s.loginBtn}>ACCEDI</button></SignInButton>
+              <SignUpButton mode="modal"><button style={s.registerBtn}>REGISTRATI</button></SignUpButton>
             </SignedOut>
-            <SignedIn>
-              <UserButton afterSignOutUrl="/" />
-            </SignedIn>
+            <SignedIn><UserButton afterSignOutUrl="/" /></SignedIn>
           </div>
         </div>
       </nav>
 
-      {/* SFONDO WARP */}
+      {/* SFONDO STELLARE */}
       <div style={s.spaceContainer}>
         {stars.map((star) => (
-          <div key={star.id} className="starburst" style={{
-            top: star.top, left: star.left, width: star.size, height: star.size, animationDuration: star.duration,
-          }} />
+          <div key={star.id} className="starburst" style={{top: star.top, left: star.left, width: star.size, height: star.size, animationDuration: star.duration}} />
         ))}
       </div>
 
       <div style={s.content}>
         {/* HERO SECTION */}
         <section style={s.hero}>
-          <div className="reveal" style={s.badge}>🚀 Digital Future is Here</div>
-          <div className="scene">
-            <div className="cube">
-              <div className="face front">WEBCRAFT</div>
-              <div className="face back">FUTURE</div>
-              <div className="face right">DESIGN</div>
-              <div className="face left">IMPACT</div>
-              <div className="face top">3D</div>
-              <div className="face bottom">CODE</div>
-            </div>
-          </div>
+          <div className="scene"><div className="cube">
+            <div className="face front">WEBCRAFT</div><div className="face back">FUTURE</div>
+            <div className="face right">AI</div><div className="face left">3D</div>
+            <div className="face top">STRIPE</div><div className="face bottom">CLERK</div>
+          </div></div>
           <h1 style={s.mainTitle}>ESPERIENZE <br /><span className="stroke-text">IMMERSIVE</span> <br /><span style={s.gradientText}>SENZA LIMITI.</span></h1>
-          <button style={s.primaryBtn} onClick={() => document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})}>
-            SCOPRI I PIANI
-          </button>
+          <p style={s.heroSub}>Convertiamo il traffico in profitto con interfacce 3D e intelligenza artificiale integrata.</p>
+          <button style={s.primaryBtn} onClick={() => document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})}>GUARDA LE OFFERTE</button>
         </section>
 
-        {/* SEZIONE PORTFOLIO (SHOWCASE) */}
+        {/* TRUST BAR SCORREVOLE */}
+        <div style={s.trustBar}>
+          <div className="marquee">
+            <span>REACT • STRIPE • OPENAI • VERCEL • CLERK • THREE.JS • NODE.JS • TAILWIND • </span>
+            <span>REACT • STRIPE • OPENAI • VERCEL • CLERK • THREE.JS • NODE.JS • TAILWIND • </span>
+          </div>
+        </div>
+
+        {/* PROCESSO */}
         <section style={s.section}>
-          <h2 style={s.secTitle}>IL NOSTRO <span className="stroke-text">IMPATTO</span></h2>
-          <div style={s.bentoGrid}>
-            <div className="glass-card" style={s.portfolioItem}>
-              <div style={s.portfolioImg}>STREETWEAR 3D</div>
-              <h4>Meta-Store</h4>
-              <p style={{fontSize: '0.8rem', opacity: 0.6}}>E-commerce immersivo per brand di moda.</p>
-            </div>
-            <div className="glass-card" style={s.portfolioItem}>
-              <div style={s.portfolioImg}>TECH DASHBOARD</div>
-              <h4>AI Analytics</h4>
-              <p style={{fontSize: '0.8rem', opacity: 0.6}}>Dashboard dati con integrazione neurale.</p>
-            </div>
+          <h2 style={s.secTitle}>IL NOSTRO <span className="stroke-text">METODO</span></h2>
+          <div style={s.processGrid}>
+            {[ {n: "01", t: "Analisi", d: "Briefing strategico per definire i tuoi obiettivi."},
+               {n: "02", t: "Design 3D", d: "Progettazione dell'interfaccia immersiva."},
+               {n: "03", t: "Sviluppo", d: "Codice pulito, veloce e ottimizzato."},
+               {n: "04", t: "Lancio", d: "Deploy e ottimizzazione SEO finale."}
+            ].map((step, i) => (
+              <div key={i} className="glass-card" style={s.processStep}>
+                <div style={s.stepNum}>{step.n}</div>
+                <h4 style={{margin: '10px 0'}}>{step.t}</h4>
+                <p style={{fontSize: '0.8rem', opacity: 0.6}}>{step.d}</p>
+              </div>
+            ))}
           </div>
         </section>
 
         {/* PIANI DI ABBONAMENTO */}
         <section id="pricing" style={s.section}>
-          <h2 style={s.secTitle}>PIANI DI <span className="stroke-text">ABBONAMENTO</span></h2>
+          <h2 style={s.secTitle}>PIANI DI <span className="stroke-text">SUCCESSO</span></h2>
           <div style={s.bentoGrid}>
+            
             {/* STARTER */}
             <div className={`flip-card ${flippedCard === 'starter' ? 'active' : ''}`} style={s.cardContainer}>
               <div className="flip-card-inner">
                 <div className="flip-card-front glass-card" style={s.bentoItem}>
                   <div style={s.icon}>🛰️</div>
                   <h3>STARTER</h3>
-                  <div style={{fontSize: '2.5rem', fontWeight: 'bold', margin: '20px 0', color: '#00d4ff'}}>€499</div>
+                  <div style={s.price}>€499</div>
                   <button style={s.cardBtn} onClick={() => setFlippedCard('starter')}>ACQUISTA ORA</button>
                 </div>
                 <div className="flip-card-back glass-card" style={s.bentoItem}>
-                  <h3>DETTAGLI</h3>
-                  <p style={s.detailsText}>Sviluppo Landing Page, Design 3D base, Hosting 12 mesi, Ottimizzazione SEO.</p>
+                  <p style={s.detailsText}>Landing Page 3D, SEO, Hosting 1 anno, 1 revisione inclusa.</p>
                   <button style={s.confirmBtn} onClick={() => handlePurchase(LINK_STARTER)}>CONFERMO</button>
                   <button style={s.backLink} onClick={() => setFlippedCard(null)}>INDIETRO</button>
                 </div>
               </div>
             </div>
 
-            {/* PRO BUSINESS */}
+            {/* PRO */}
             <div className={`flip-card ${flippedCard === 'pro' ? 'active' : ''}`} style={s.cardContainer}>
               <div className="flip-card-inner">
                 <div className="flip-card-front glass-card" style={{...s.bentoItem, borderColor: '#00d4ff'}}>
                   <div style={s.icon}>🚀</div>
                   <h3 style={{color: '#00d4ff'}}>PRO BUSINESS</h3>
-                  <div style={{fontSize: '2.5rem', fontWeight: 'bold', margin: '20px 0'}}>€1.299</div>
+                  <div style={s.price}>€1.299</div>
                   <button style={{...s.cardBtn, background: '#00d4ff'}} onClick={() => setFlippedCard('pro')}>ACQUISTA ORA</button>
                 </div>
                 <div className="flip-card-back glass-card" style={{...s.bentoItem, borderColor: '#00d4ff'}}>
-                  <h3>DETTAGLI PRO</h3>
-                  <p style={s.detailsText}>E-commerce, Area Riservata, Gestione Progetti, Supporto VIP h24.</p>
+                  <p style={s.detailsText}>E-commerce completo, Area Clienti, Supporto VIP H24.</p>
                   <button style={s.confirmBtn} onClick={() => handlePurchase(LINK_PRO)}>CONFERMO</button>
                   <button style={s.backLink} onClick={() => setFlippedCard(null)}>INDIETRO</button>
                 </div>
               </div>
             </div>
-            
-            {/* CUSTOM AI */}
+
+            {/* CUSTOM */}
             <div className={`flip-card ${flippedCard === 'custom' ? 'active' : ''}`} style={s.cardContainer}>
               <div className="flip-card-inner">
                 <div className="flip-card-front glass-card" style={s.bentoItem}>
                   <div style={s.icon}>🛸</div>
                   <h3>CUSTOM AI</h3>
-                  <div style={{fontSize: '2.5rem', fontWeight: 'bold', margin: '20px 0', color: '#00d4ff'}}>PREVENTIVO</div>
+                  <div style={s.price}>PREVENTIVO</div>
                   <button style={s.cardBtn} onClick={() => setFlippedCard('custom')}>CONTATTACI</button>
                 </div>
                 <div className="flip-card-back glass-card" style={s.bentoItem}>
-                  <h3>SU MISURA</h3>
-                  <p style={s.detailsText}>Integrazione LLM personalizzati, Automazioni complesse e Scalabilità Enterprise.</p>
+                  <p style={s.detailsText}>Ecosistemi complessi, Automazioni AI e scalabilità infinita.</p>
                   <button style={s.confirmBtn} onClick={() => window.location.href='mailto:info@webcraft.site'}>SCRIVICI</button>
                   <button style={s.backLink} onClick={() => setFlippedCard(null)}>INDIETRO</button>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* SEZIONE FAQ */}
-        <section style={s.section}>
-          <h2 style={s.secTitle}>DOMANDE <span className="stroke-text">FREQUENTI</span></h2>
-          <div style={{maxWidth: '800px', margin: '0 auto'}}>
-            {faqs.map((faq, index) => (
-              <div key={index} style={s.faqItem} onClick={() => setActiveFaq(activeFaq === index ? null : index)}>
-                <div style={s.faqQuestion}>
-                  {faq.q} <span>{activeFaq === index ? '−' : '+'}</span>
-                </div>
-                {activeFaq === index && <div style={s.faqAnswer}>{faq.a}</div>}
-              </div>
-            ))}
           </div>
         </section>
       </div>
+
+      {/* AI BOT UI */}
+      <div style={s.botContainer}>
+        {isChatOpen && (
+          <div className="glass-card" style={s.chatWindow}>
+            <div style={s.chatHeader}>WEBCRAFT AI</div>
+            <div style={s.chatBody}>
+              {messages.map((m, i) => (
+                <div key={i} style={{...s.msg, alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start', background: m.role === 'user' ? '#00d4ff' : 'rgba(255,255,255,0.1)', color: m.role === 'user' ? '#000' : '#fff'}}>
+                  {m.content}
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+            <form onSubmit={handleChat} style={s.chatFooter}>
+              <input value={chatInput} onChange={(e) => setChatInput(e.target.value)} placeholder="Chiedimi qualcosa..." style={s.chatInput} />
+            </form>
+          </div>
+        )}
+        <button onClick={() => setIsChatOpen(!isChatOpen)} style={s.botTrigger}>
+          {isChatOpen ? "✕" : "🤖"}
+        </button>
+      </div>
+
+      {/* WHATSAPP */}
+      <a href="https://wa.me/tuonumero" target="_blank" style={s.whatsapp}>💬</a>
 
       {/* FOOTER */}
       <footer style={s.footer}>
         <div style={s.footerGrid}>
           <div>
             <div style={s.logo}>WEBCRAFT</div>
-            <p style={{opacity: 0.5, fontSize: '0.8rem', marginTop: '10px'}}>© 2026 Webcraft Agency. P.IVA 1234567890</p>
+            <p style={{opacity: 0.4, fontSize: '0.7rem'}}>© 2026 Webcraft. P.IVA 01234567890</p>
           </div>
-          <div style={{display: 'flex', gap: '40px'}}>
-            <div style={s.footerCol}>
-              <span style={{fontWeight: 'bold'}}>Legal</span>
-              <a href="#" style={s.footerLink}>Privacy Policy</a>
-              <a href="#" style={s.footerLink}>Termini</a>
-            </div>
-            <div style={s.footerCol}>
-              <span style={{fontWeight: 'bold'}}>Social</span>
-              <a href="#" style={s.footerLink}>Instagram</a>
-              <a href="#" style={s.footerLink}>LinkedIn</a>
-            </div>
+          <div style={{display: 'flex', gap: '20px'}}>
+            <button onClick={() => setShowLegal(true)} style={s.footerBtn}>Privacy & Termini</button>
+            <a href="mailto:info@webcraft.site" style={s.footerBtn}>Email</a>
           </div>
         </div>
       </footer>
 
+      {/* MODALE LEGALE */}
+      {showLegal && (
+        <div style={s.modalOverlay} onClick={() => setShowLegal(false)}>
+          <div style={s.modal} onClick={e => e.stopPropagation()}>
+            <h3>Privacy & Condizioni</h3>
+            <p style={{fontSize: '0.8rem', opacity: 0.7, lineHeight: '1.6'}}>Tutti i pagamenti sono gestiti da Stripe. Il completamento del servizio avviene entro le tempistiche concordate. I dati personali sono protetti dal GDPR.</p>
+            <button style={{...s.primaryBtn, marginTop: '20px'}} onClick={() => setShowLegal(false)}>CHIUDI</button>
+          </div>
+        </div>
+      )}
+
       <style>{`
-        .flip-card { perspective: 1000px; min-height: 420px; }
+        .marquee { display: flex; overflow: hidden; white-space: nowrap; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 20px 0; }
+        .marquee span { display: inline-block; padding-left: 50px; animation: scroll 25s linear infinite; font-weight: 900; opacity: 0.15; font-size: 1.5rem; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .flip-card { perspective: 1000px; height: 380px; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card.active .flip-card-inner { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; box-sizing: border-box; }
-        .flip-card-back { transform: rotateY(180deg); background: rgba(0, 212, 255, 0.05) !important; }
-        .scene { width: 150px; height: 150px; perspective: 600px; margin: 20px auto; }
-        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: rotateCube 15s infinite linear; }
-        .face { position: absolute; width: 150px; height: 150px; border: 2px solid #00d4ff; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1rem; color: #00d4ff; backdrop-filter: blur(5px); }
-        .front { transform: rotateY(0deg) translateZ(75px); } .back { transform: rotateY(180deg) translateZ(75px); }
-        .right { transform: rotateY(90deg) translateZ(75px); } .left { transform: rotateY(-90deg) translateZ(75px); }
-        .top { transform: rotateX(90deg) translateZ(75px); } .bottom { transform: rotateX(-90deg) translateZ(75px); }
-        @keyframes rotateCube { from { transform: rotateX(0deg) rotateY(0deg); } to { transform: rotateX(360deg) rotateY(360deg); } }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 35px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 25px; box-sizing: border-box; }
+        .flip-card-back { transform: rotateY(180deg); background: rgba(0,212,255,0.1) !important; }
+        .cube { width: 100px; height: 100px; position: relative; transform-style: preserve-3d; animation: rotateCube 12s infinite linear; }
+        .face { position: absolute; width: 100px; height: 100px; border: 1px solid #00d4ff; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #00d4ff; backdrop-filter: blur(5px); }
+        .front { transform: rotateY(0deg) translateZ(50px); } .back { transform: rotateY(180deg) translateZ(50px); }
+        .right { transform: rotateY(90deg) translateZ(50px); } .left { transform: rotateY(-90deg) translateZ(50px); }
+        .top { transform: rotateX(90deg) translateZ(50px); } .bottom { transform: rotateX(-90deg) translateZ(50px); }
+        @keyframes rotateCube { from { transform: rotateX(0); } to { transform: rotateX(360deg) rotateY(360deg); } }
+        .starburst { position: absolute; background: white; border-radius: 50%; animation: warp infinite linear; }
         @keyframes warp { 0% { transform: translateZ(-1000px); opacity: 0; } 100% { transform: translateZ(500px); opacity: 0; } }
-        .starburst { position: absolute; background: white; border-radius: 50%; box-shadow: 0 0 10px #00d4ff; animation: warp infinite linear; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .stroke-text { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.4); }
-        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px; transition: 0.4s; }
-        .glass-card:hover { border-color: #00d4ff; }
       `}</style>
     </div>
   );
@@ -222,35 +251,44 @@ export default function App() {
 
 const s = {
   page: { background: '#000', color: '#fff', minHeight: '100vh', fontFamily: 'system-ui', overflowX: 'hidden' },
-  navbar: { position: 'fixed', top: 0, width: '100%', zIndex: 100, padding: '15px 0', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(15px)', borderBottom: '1px solid rgba(255,255,255,0.1)' },
+  navbar: { position: 'fixed', top: 0, width: '100%', zIndex: 100, padding: '15px 0', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(255,255,255,0.1)' },
   navContainer: { width: 'min(1200px, 90%)', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  logo: { fontWeight: '900', fontSize: '1.2rem', color: '#00d4ff', letterSpacing: '2px' },
-  loginBtn: { background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '0.8rem' },
-  registerBtn: { background: '#00d4ff', color: '#000', border: 'none', padding: '8px 20px', borderRadius: '50px', fontWeight: 'bold', cursor: 'pointer' },
+  logo: { fontWeight: '900', color: '#00d4ff', letterSpacing: '2px', fontSize: '1.2rem' },
+  loginBtn: { background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' },
+  registerBtn: { background: '#00d4ff', color: '#000', border: 'none', padding: '10px 20px', borderRadius: '50px', fontWeight: 'bold', cursor: 'pointer' },
   spaceContainer: { position: 'fixed', inset: 0, zIndex: 0, perspective: '1000px' },
-  content: { position: 'relative', zIndex: 2, width: 'min(1200px, 90%)', margin: '0 auto', paddingTop: '80px' },
-  hero: { minHeight: '90vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' },
-  mainTitle: { fontSize: 'clamp(2.5rem, 8vw, 5rem)', fontWeight: '900', lineHeight: '0.9', marginBottom: '30px' },
+  content: { position: 'relative', zIndex: 2, width: 'min(1200px, 90%)', margin: '0 auto', paddingTop: '100px' },
+  hero: { minHeight: '85vh', textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
+  mainTitle: { fontSize: 'clamp(2.5rem, 8vw, 6rem)', fontWeight: '900', lineHeight: '0.9', margin: '30px 0' },
   gradientText: { background: 'linear-gradient(to right, #fff, #00d4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
-  badge: { display: 'inline-block', margin: '0 auto 10px', background: 'rgba(0,212,255,0.1)', color: '#00d4ff', padding: '8px 20px', borderRadius: '50px', border: '1px solid #00d4ff', fontSize: '0.8rem' },
-  primaryBtn: { background: '#fff', color: '#000', border: 'none', padding: '15px 40px', fontSize: '1rem', fontWeight: '900', borderRadius: '100px', cursor: 'pointer' },
+  heroSub: { fontSize: '1rem', color: '#aaa', maxWidth: '600px', margin: '0 auto 40px' },
+  primaryBtn: { background: '#fff', color: '#000', border: 'none', padding: '18px 45px', borderRadius: '50px', fontWeight: '900', cursor: 'pointer', boxShadow: '0 10px 30px rgba(255,255,255,0.2)' },
+  trustBar: { margin: '80px 0' },
   section: { padding: '80px 0' },
-  secTitle: { fontSize: 'clamp(1.8rem, 4vw, 3rem)', textAlign: 'center', marginBottom: '50px', fontWeight: '900' },
-  bentoGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px' },
-  bentoItem: { display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center', textAlign: 'center' },
-  portfolioItem: { padding: '20px', textAlign: 'center' },
-  portfolioImg: { height: '150px', background: 'rgba(0,212,255,0.1)', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '15px', fontWeight: 'bold', color: '#00d4ff', border: '1px dashed #00d4ff' },
-  cardContainer: { width: '100%' },
-  icon: { fontSize: '2.5rem' },
-  cardBtn: { background: '#fff', color: '#000', border: 'none', padding: '12px', width: '100%', borderRadius: '50px', fontWeight: 'bold', cursor: 'pointer' },
-  confirmBtn: { background: '#00d4ff', color: '#000', border: 'none', padding: '12px', width: '100%', borderRadius: '50px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '10px' },
-  backLink: { background: 'none', border: '1px solid #555', color: '#fff', padding: '8px', width: '100%', borderRadius: '50px', cursor: 'pointer', fontSize: '0.8rem' },
-  detailsText: { fontSize: '0.85rem', opacity: 0.7, marginBottom: '20px', lineHeight: '1.5' },
-  faqItem: { borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '20px 0', cursor: 'pointer' },
-  faqQuestion: { display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '1.1rem' },
-  faqAnswer: { marginTop: '15px', opacity: 0.7, fontSize: '0.9rem', lineHeight: '1.6' },
-  footer: { background: '#050505', padding: '60px 0', borderTop: '1px solid rgba(255,255,255,0.05)', position: 'relative', zIndex: 2 },
-  footerGrid: { width: 'min(1200px, 90%)', margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '40px' },
-  footerCol: { display: 'flex', flexDirection: 'column', gap: '10px' },
-  footerLink: { color: '#fff', textDecoration: 'none', opacity: 0.5, fontSize: '0.85rem' }
+  secTitle: { fontSize: '2.5rem', textAlign: 'center', marginBottom: '50px', fontWeight: '900' },
+  processGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' },
+  processStep: { padding: '35px', borderRadius: '35px', textAlign: 'center' },
+  stepNum: { fontSize: '2.5rem', fontWeight: '900', color: '#00d4ff' },
+  bentoGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' },
+  bentoItem: { textAlign: 'center', gap: '10px' },
+  price: { fontSize: '2.8rem', fontWeight: 'bold', color: '#00d4ff', margin: '15px 0' },
+  cardBtn: { background: '#fff', color: '#000', border: 'none', padding: '15px', width: '100%', borderRadius: '50px', fontWeight: 'bold', cursor: 'pointer' },
+  confirmBtn: { background: '#00d4ff', color: '#000', border: 'none', padding: '15px', width: '100%', borderRadius: '50px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '10px' },
+  backLink: { background: 'none', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '8px 20px', borderRadius: '50px', cursor: 'pointer', fontSize: '0.7rem' },
+  detailsText: { fontSize: '0.9rem', opacity: 0.8, marginBottom: '25px', lineHeight: '1.6' },
+  icon: { fontSize: '3rem' },
+  whatsapp: { position: 'fixed', bottom: '105px', right: '30px', background: '#25d366', width: '55px', height: '55px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, textDecoration: 'none', fontSize: '1.5rem', boxShadow: '0 5px 20px rgba(0,0,0,0.3)' },
+  botContainer: { position: 'fixed', bottom: '30px', right: '30px', zIndex: 1001, display: 'flex', flexDirection: 'column', alignItems: 'flex-end' },
+  botTrigger: { width: '65px', height: '65px', borderRadius: '50%', background: '#00d4ff', border: 'none', color: '#000', fontSize: '1.8rem', cursor: 'pointer', boxShadow: '0 5px 20px rgba(0,212,255,0.5)' },
+  chatWindow: { width: '320px', height: '450px', marginBottom: '15px', borderRadius: '25px', display: 'flex', flexDirection: 'column', overflow: 'hidden', border: '1px solid rgba(0,212,255,0.3)' },
+  chatHeader: { padding: '18px', background: 'rgba(0,212,255,0.15)', fontSize: '0.8rem', fontWeight: 'bold', letterSpacing: '1px', textAlign: 'center' },
+  chatBody: { flex: 1, padding: '15px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' },
+  msg: { padding: '10px 15px', borderRadius: '18px', fontSize: '0.85rem', maxWidth: '85%' },
+  chatFooter: { padding: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.02)' },
+  chatInput: { width: '100%', background: 'none', border: 'none', color: '#fff', outline: 'none', fontSize: '0.9rem' },
+  footer: { padding: '50px 0', background: '#050505', borderTop: '1px solid rgba(255,255,255,0.05)', position: 'relative', zIndex: 2 },
+  footerGrid: { width: 'min(1200px, 90%)', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  footerBtn: { background: 'none', border: 'none', color: '#fff', opacity: 0.4, cursor: 'pointer', fontSize: '0.75rem', textDecoration: 'none' },
+  modalOverlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000 },
+  modal: { background: '#111', padding: '50px', borderRadius: '40px', maxWidth: '500px', textAlign: 'center', border: '1px solid #00d4ff' }
 };
