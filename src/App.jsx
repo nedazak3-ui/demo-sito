@@ -1,167 +1,164 @@
 import React, { useState, useEffect } from "react";
 
-export default function App() {
-  const [m, setM] = useState({ x: 0, y: 0 });
-  
+// Hook per tracciare il mouse e creare l'effetto parallasse
+const useMousePerspective = () => {
+  const [perspective, setPerspective] = useState({ x: 0, y: 0 });
+
   useEffect(() => {
-    const move = (e) => setM({
-      x: (e.clientX / window.innerWidth - 0.5) * 80,
-      y: (e.clientY / window.innerHeight - 0.5) * 80
-    });
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
+    const handleMouseMove = (e) => {
+      // Calcoliamo la posizione del mouse rispetto al centro dello schermo (valori da -1 a 1)
+      const x = (e.clientX / window.innerWidth) * 2 - 1;
+      const y = (e.clientY / window.innerHeight) * 2 - 1;
+      setPerspective({ x, y });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
+
+  return perspective;
+};
+
+export default function App() {
+  const mouse = useMousePerspective();
+
+  // Generiamo 80 particelle di sfondo con posizioni casuali
+  const particles = Array.from({ length: 80 }).map((_, i) => ({
+    id: i,
+    top: `${Math.random() * 100}%`,
+    left: `${Math.random() * 100}%`,
+    size: `${Math.random() * 3}px`,
+    depth: Math.random() * 2 + 0.5, // Velocità di parallasse diversa per ogni particella
+  }));
 
   return (
     <div style={s.page}>
-      {/* 3D ENGINE CORE - FISSO SULLO SFONDO */}
-      <div style={s.viewport}>
-        <div style={{...s.scene, transform: `rotateX(${-m.y}deg) rotateY(${m.x}deg)`}}>
-          {/* Geometria Centrale Complessa */}
-          <div className="atom">
-            <div className="nucleus"></div>
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className={`orbit o${i}`}></div>
-            ))}
-          </div>
-          {/* Pioggia di particelle 3D */}
-          {[...Array(200)].map((_, i) => (
-            <div key={i} className="dot-3d" style={{
-              transform: `translate3d(${Math.random()*2000-1000}px, ${Math.random()*2000-1000}px, ${Math.random()*2000-1000}px)`,
-              animationDuration: `${Math.random()*5+2}s`
-            }}></div>
-          ))}
-        </div>
+      {/* --- SFONDO PARTICELLE REATTIVE --- */}
+      <div style={s.spaceContainer}>
+        {particles.map((p) => (
+          <div
+            key={p.id}
+            style={{
+              ...s.particle,
+              top: p.top,
+              left: p.left,
+              width: p.size,
+              height: p.size,
+              // Spostiamo le particelle in base al mouse, usando la loro "profondità"
+              transform: `translate(${mouse.x * 20 * p.depth}px, ${mouse.y * 20 * p.depth}px)`,
+            }}
+          />
+        ))}
       </div>
 
-      <div style={s.container}>
-        {/* HEADER VERO LOGO */}
-        <nav style={s.nav}>
-          <div style={s.logo}>WEBCRAFT <span className="glitch-v">V.4.0</span></div>
-          <div style={s.navRight}>STATUS: <span className="online">ULTRA_READY</span></div>
-        </nav>
-
-        {/* --- SEZIONE 1: HERO (L'IMPATTO) --- */}
+      <div style={s.content}>
+        {/* --- HERO SECTION --- */}
         <section style={s.hero}>
-          <div className="top-label">OVER-ENGINEERED DIGITAL EXPERIENCE</div>
-          <h1 style={s.mainTitle}>
-            <span className="stroke">PURE</span><br />
-            <span>EXCELLENCE</span>
+          <div style={s.badge}>
+            🚀 Web Design pensato solo per la qualità del servizio
+          </div>
+
+          {/* --- IL CUBO 3D MAGNETICO (SEGUE IL MOUSE) --- */}
+          <div className="scene" style={s.scene}>
+            <div
+              className="cube"
+              style={{
+                ...s.cube,
+                // Applichiamo la rotazione automatica + l'inclinazione del mouse
+                transform: `rotateX(${-mouse.y * 30}deg) rotateY(${mouse.x * 30}deg) rotateZ(0deg)`,
+              }}
+            >
+              <div className="face front">CODE</div>
+              <div className="face back">FUTURE</div>
+              <div className="face right">DESIGN</div>
+              <div className="face left">IMPACT</div>
+              <div className="face top">3D</div>
+              <div className="face bottom">HTML</div>
+            </div>
+          </div>
+
+          {/* --- TITOLO DINAMICO (SEGUE IL MOUSE) --- */}
+          <h1
+            style={{
+              ...s.mainTitle,
+              // Il titolo si inclina leggermente per dare profondità
+              transform: `perspective(1000px) rotateX(${mouse.y * -5}deg) rotateY(${mouse.x * 5}deg)`,
+            }}
+          >
+            ESPERIENZE <br />
+            <span className="stroke-text">IMMERSIVE</span> <br />
+            <span style={s.cyanText}>SENZA LIMITI.</span>
           </h1>
-          <p style={s.sub}>Progettiamo siti web che non solo funzionano, ma dominano lo spazio digitale. 3D Reale, velocità brutale, design atomico.</p>
-          <button className="cta-heavy">START MISSION</button>
-        </section>
 
-        {/* --- SEZIONE 2: BENTO GRID GIGANTE (SERVIZI) --- */}
-        <section style={s.section}>
-          <h2 style={s.secTitle}>CORE CAPABILITIES</h2>
-          <div style={s.bento}>
-            <div className="card-3d c1">
-              <div className="c-tag">01</div>
-              <h3>3D ENGINE</h3>
-              <p>Rendering accelerato via hardware per fluidità a 60fps costante.</p>
-            </div>
-            <div className="card-3d c2">
-              <div className="c-tag">02</div>
-              <h3>NEURAL SPEED</h3>
-              <p>Ottimizzazione del codice ai massimi livelli mondiali.</p>
-            </div>
-            <div className="card-3d c3">
-              <div className="c-tag">03</div>
-              <h3>QUANTUM UI</h3>
-              <p>Interfacce che reagiscono istantaneamente ad ogni input umano.</p>
-            </div>
-            <div className="card-3d c4">
-              <div className="c-tag">04</div>
-              <h3>CYBER SECURITY</h3>
-              <p>Protezione di grado enterprise integrata in ogni pixel.</p>
-            </div>
-          </div>
+          <p style={s.heroSub}>
+            Non è solo un sito. È una macchina da guerra digitale progettata
+            con ingegneria estetica e performance brutali.
+          </p>
         </section>
-
-        {/* --- SEZIONE 3: TIMELINE DEL PROGETTO --- */}
-        <section style={s.section}>
-          <h2 style={s.secTitle}>THE MISSION PLAN</h2>
-          <div style={s.timeline}>
-            {["RESEARCH", "PROTOTYPING", "3D ENGINERING", "DEPLOY"].map((step, i) => (
-              <div key={i} className="t-item">
-                <div className="t-box">
-                  <h4>PHASE_0{i+1}</h4>
-                  <h3>{step}</h3>
-                  <p>Integrazione di sistemi avanzati per il massimo rendimento estetico.</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* --- SEZIONE 4: CTA FINALE --- */}
-        <section style={s.ctaWrap}>
-          <div className="cta-box">
-            <h2>NON ACCETTARE LA MEDIOCRITÀ.</h2>
-            <p>Il tuo brand merita il meglio che la tecnologia possa offrire.</p>
-            <button className="cta-heavy">JOIN THE FUTURE</button>
-          </div>
-        </section>
-
-        <footer style={s.footer}>WEBCRAFT CORE © 2026 // ALL SYSTEMS OPERATIONAL</footer>
       </div>
 
+      {/* --- CSS ENGINE PER GLI EFFETTI 3D --- */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Space+Grotesk:wght@300;700&display=swap');
+        /* Definizione delle facce del cubo (come nel tuo screenshot) */
+        .scene { transform-style: preserve-3d; }
+        .cube {
+          transform-style: preserve-3d;
+          /* Rimuoviamo l'animazione automatica per controllarla col mouse,
+             oppure la lasciamo se vuoi che giri SEMPRE ma si inclini col mouse.
+             Proviamo a lasciarla per ora: */
+          animation: rotateCube 20s infinite linear;
+        }
+        .face {
+          position: absolute;
+          width: 200px;
+          height: 200px;
+          border: 2px solid #00d4ff;
+          background: rgba(0, 212, 255, 0.08);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 900;
+          font-size: 1.5rem;
+          color: #00d4ff;
+          backdrop-filter: blur(5px);
+          font-family: sans-serif;
+          letter-spacing: 2px;
+        }
 
-        /* ANIMAZIONI 3D ATOMICHE */
-        .atom { position: relative; width: 100px; height: 100px; transform-style: preserve-3d; }
-        .nucleus { width: 40px; height: 40px; background: #fff; border-radius: 50%; box-shadow: 0 0 80px #00d4ff; position: absolute; top: 30px; left: 30px; }
-        .orbit { position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; border: 1px solid rgba(0,212,255,0.3); border-radius: 50%; transform-style: preserve-3d; animation: orb infinite linear; }
-        .o0 { transform: rotateX(80deg) rotateY(20deg); animation-duration: 4s; }
-        .o1 { transform: rotateX(-80deg) rotateY(40deg); animation-duration: 6s; }
-        .o2 { transform: rotateY(90deg); animation-duration: 3s; }
-        .o3 { transform: rotateX(45deg); animation-duration: 8s; }
-        @keyframes orb { from { transform: rotateZ(0); } to { transform: rotateZ(360deg); } }
+        /* Posizionamento delle facce nello spazio 3D */
+        .front  { transform: rotateY(0deg) translateZ(100px); }
+        .back   { transform: rotateY(180deg) translateZ(100px); }
+        .right  { transform: rotateY(90deg) translateZ(100px); }
+        .left   { transform: rotateY(-90deg) translateZ(100px); }
+        .top    { transform: rotateX(90deg) translateZ(100px); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); }
 
-        .dot-3d { position: absolute; width: 2px; height: 2px; background: #fff; box-shadow: 0 0 10px #00d4ff; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+        /* Animazione di rotazione automatica di base */
+        @keyframes rotateCube {
+          from { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+          to { transform: rotateX(360deg) rotateY(360deg) rotateZ(0deg); }
+        }
 
-        /* UI STYLES */
-        .stroke { color: transparent; -webkit-text-stroke: 1.5px #fff; }
-        .glitch-v { color: #00d4ff; animation: glitch 0.5s infinite alternate; }
-        @keyframes glitch { from { opacity: 1; } to { opacity: 0.5; } }
-
-        .card-3d { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 50px; border-radius: 20px; backdrop-filter: blur(20px); transition: 0.4s; }
-        .card-3d:hover { border-color: #00d4ff; transform: perspective(1000px) rotateX(10deg) translateY(-20px); background: rgba(0,212,255,0.05); }
-        .c1, .c4 { grid-column: span 2; }
-        .c-tag { color: #00d4ff; font-weight: 800; margin-bottom: 10px; }
-
-        .cta-heavy { background: #fff; color: #000; border: none; padding: 25px 60px; font-family: 'Syncopate', sans-serif; font-size: 0.9rem; font-weight: 800; cursor: pointer; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition: 0.3s; }
-        .cta-heavy:hover { background: #00d4ff; box-shadow: 0 0 60px #00d4ff; transform: scale(1.1); }
-
-        .t-item { border-left: 2px solid #222; padding-left: 40px; margin-bottom: 60px; transition: 0.4s; }
-        .t-item:hover { border-color: #00d4ff; }
-        .t-box h4 { color: #555; margin: 0; }
-        .t-box h3 { margin: 10px 0; font-family: 'Syncopate', sans-serif; font-size: 2rem; }
-
-        .cta-box { border: 1px solid #00d4ff; padding: 120px 40px; text-align: center; border-radius: 40px; background: radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 100%); }
+        /* Effetto testo outline per "IMMERSIVE" */
+        .stroke-text {
+          color: transparent;
+          -webkit-text-stroke: 1.5px rgba(255,255,255,0.6);
+        }
       `}</style>
     </div>
   );
 }
 
 const s = {
-  page: { background: '#000', color: '#fff', minHeight: '100vh', fontFamily: "'Space Grotesk', sans-serif", margin: 0, overflowX: 'hidden' },
-  viewport: { position: 'fixed', inset: 0, zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', perspective: '1200px' },
-  scene: { position: 'relative', transformStyle: 'preserve-3d', transition: 'transform 0.1s linear' },
-  container: { position: 'relative', zIndex: 10, width: '90%', maxWidth: '1400px', margin: '0 auto' },
-  nav: { display: 'flex', justifyContent: 'space-between', padding: '60px 0', alignItems: 'center', fontFamily: "'Syncopate', sans-serif", fontSize: '0.8rem' },
-  logo: { fontSize: '1.2rem', fontWeight: 800 },
-  navRight: { opacity: 0.5 },
-  hero: { height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' },
-  mainTitle: { fontFamily: "'Syncopate', sans-serif", fontSize: 'clamp(3rem, 12vw, 9rem)', lineHeight: 0.9, margin: '20px 0' },
-  sub: { maxWidth: '600px', fontSize: '1.2rem', color: '#888', marginBottom: '50px', lineHeight: 1.6 },
-  section: { padding: '150px 0' },
-  secTitle: { fontFamily: "'Syncopate', sans-serif", fontSize: '3.5rem', marginBottom: '100px' },
-  bento: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '30px' },
-  timeline: { maxWidth: '800px' },
-  ctaWrap: { paddingBottom: '200px' },
-  footer: { padding: '100px 0', textAlign: 'center', opacity: 0.2, fontSize: '0.7rem', letterSpacing: '5px' }
+  page: { background: '#000', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif', overflowX: 'hidden', margin: 0 },
+  spaceContainer: { position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden' },
+  particle: { position: 'absolute', background: '#fff', borderRadius: '50%', opacity: 0.3, boxShadow: '0 0 10px #00d4ff', transition: 'transform 0.1s ease-out' },
+  content: { position: 'relative', zIndex: 2, width: 'min(1200px, 90%)', margin: '0 auto' },
+  hero: { minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', perspective: '1000px' },
+  badge: { background: 'rgba(0,212,255,0.1)', color: '#00d4ff', padding: '10px 25px', borderRadius: '50px', border: '1px solid #00d4ff', marginBottom: '40px', fontWeight: 'bold', fontSize: '0.9rem' },
+  scene: { width: '200px', height: '200px', margin: '0 auto 60px auto', perspective: '1000px' },
+  cube: { width: '100%', height: '100%', position: 'relative', transition: 'transform 0.1s ease-out' },
+  mainTitle: { fontSize: 'clamp(3rem, 10vw, 8rem)', fontWeight: '900', lineHeight: '0.85', marginBottom: '30px', letterSpacing: '-0.04em', transition: 'transform 0.1s ease-out' },
+  cyanText: { background: 'linear-gradient(to right, #fff, #00d4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
+  heroSub: { fontSize: '1.3rem', color: '#888', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }
 };
