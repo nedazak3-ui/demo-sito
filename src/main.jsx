@@ -4,8 +4,8 @@ import App from './App.jsx'
 import './index.css'
 import { ClerkProvider } from '@clerk/clerk-react'
 
-// La tua chiave reale copiata dagli screenshot
-const PUBLISHABLE_KEY = "pk_test_Y3VyaW91cy1yYXtNi5jbGVyay5hYzI$"
+// CHIAVE PULITA (Ho rimosso il simbolo $ finale)
+const PUBLISHABLE_KEY = "pk_test_Y3VyaW91cy1yYXtNi5jbGVyay5hYzI"
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
