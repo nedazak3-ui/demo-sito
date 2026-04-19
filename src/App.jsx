@@ -1,20 +1,38 @@
 import React from "react";
-import { ArrowRight, Sparkles, Zap, Code, Smartphone, mouse } from "lucide-react";
 
 export default function App() {
+  // Generiamo 100 stelle con posizioni e ritardi casuali
+  const stars = Array.from({ length: 100 }).map((_, i) => ({
+    id: i,
+    top: `${Math.random() * 100}%`,
+    left: `${Math.random() * 100}%`,
+    duration: `${Math.random() * 3 + 2}s`,
+    delay: `${Math.random() * 5}s`,
+    size: `${Math.random() * 3}px`
+  }));
+
   return (
     <div style={s.page}>
-      {/* SFONDO 3D SPAZIALE NATIVO */}
+      {/* --- SFONDO SPAZIALE 3D NATIVO --- */}
       <div style={s.spaceContainer}>
-        {[...Array(50)].map((_, i) => (
-          <div key={i} className="star" style={{
-            ...s.star,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-            width: `${Math.random() * 3}px`,
-            height: `${Math.random() * 3}px`,
-          }} />
+        {stars.map((star) => (
+          <div 
+            key={star.id} 
+            className="star" 
+            style={{
+              position: 'absolute',
+              top: star.top,
+              left: star.left,
+              width: star.size,
+              height: star.size,
+              background: 'white',
+              borderRadius: '50%',
+              opacity: 0,
+              boxShadow: '0 0 10px #00d4ff',
+              animation: `warp ${star.duration} linear infinite`,
+              animationDelay: star.delay
+            }} 
+          />
         ))}
       </div>
 
@@ -22,84 +40,77 @@ export default function App() {
         {/* HEADER */}
         <nav style={s.nav}>
           <div style={s.logo}>WEBCRAFT<span style={{color: '#00d4ff'}}>.</span></div>
-          <button style={s.navBtn}>PROGETTI</button>
+          <div style={{fontSize: '0.9rem', opacity: 0.6}}>Freelance Developer</div>
         </nav>
 
-        {/* SECTION 1: HERO - IMPATTO TOTALE */}
+        {/* HERO SECTION */}
         <section style={s.hero}>
-          <div className="reveal" style={s.badge}>
+          <div className="fade-in" style={s.badge}>
             🚀 Web Design pensato solo per la qualità del servizio
           </div>
+          
           <h1 style={s.mainTitle}>
             NON CREO SITI.<br />
-            <span className="outline-text">COSTRUISCO</span><br />
+            <span className="stroke-text">COSTRUISCO</span><br />
             <span style={s.gradientText}>IMPATTO.</span>
           </h1>
+
           <p style={s.heroSub}>
-            Freelance specializzato in esperienze digitali che lasciano il segno. 
-            Design audace, velocità estrema, conversione garantita.
+            Trasformo la tua visione in un'esperienza digitale premium che cattura l'attenzione in meno di 3 secondi.
           </p>
-          <div style={s.btnGroup}>
-            <button style={s.primaryBtn}>INIZIA ORA <ArrowRight size={18} /></button>
-            <button style={s.secondaryBtn}>IL MIO METODO</button>
-          </div>
+
+          <button style={s.primaryBtn}>
+            INIZIA ORA
+          </button>
         </section>
 
-        {/* SECTION 2: PERCHÉ WEBCRAFT (LUNGA) */}
-        <section style={s.section}>
-          <h2 style={s.sectionTitle}>PERCHÉ SCEGLIERE IL TOP <Sparkles /></h2>
-          <div style={s.grid}>
-            <div style={s.card}>
-              <Zap size={40} color="#00d4ff" />
-              <h3>VELOCITÀ BRUTALE</h3>
-              <p>Siti che caricano in meno di 1 secondo. Il tempo è denaro, non ne faccio perdere ai tuoi clienti.</p>
-            </div>
-            <div style={s.card}>
-              <Code size={40} color="#00d4ff" />
-              <h3>CODICE SU MISURA</h3>
-              <p>Niente template pronti. Ogni linea di codice è scritta per massimizzare le tue prestazioni.</p>
-            </div>
-            <div style={s.card}>
-              <Smartphone size={40} color="#00d4ff" />
-              <h3>MOBILE FIRST</h3>
-              <p>Il 90% dei tuoi clienti ti vedrà da uno smartphone. Il mio design è perfetto su ogni schermo.</p>
-            </div>
+        {/* SECTION CARDS - 3D HOVER EFFETTO */}
+        <section style={s.gridSection}>
+          <div className="card" style={s.card}>
+            <div style={s.iconBlue}>⚡</div>
+            <h3>VELOCITÀ LUCE</h3>
+            <p>Ottimizzazione estrema per prestazioni fuori dal comune.</p>
           </div>
-        </section>
-
-        {/* SECTION 3: CTA FINALE */}
-        <section style={{...s.section, paddingBottom: '200px'}}>
-          <div style={s.ctaBox}>
-            <h2 style={{fontSize: '3rem', margin: 0}}>PRONTO AL SALTO DI QUALITÀ?</h2>
-            <p style={{opacity: 0.7, fontSize: '1.2rem'}}>Smettila di essere invisibile. Diventa indimenticabile.</p>
-            <button style={{...s.primaryBtn, margin: '0 auto'}}>PARLIAMO DEL TUO PROGETTO</button>
+          <div className="card" style={s.card}>
+            <div style={s.iconBlue}>💎</div>
+            <h3>QUALITÀ PREMIUM</h3>
+            <p>Design curato in ogni singolo pixel per trasmettere lusso.</p>
+          </div>
+          <div className="card" style={s.card}>
+            <div style={s.iconBlue}>🛠️</div>
+            <h3>SOLUZIONI 3D</h3>
+            <p>Interfacce immersive che i tuoi competitor non hanno.</p>
           </div>
         </section>
       </div>
 
-      {/* CSS IN JS PER ANIMAZIONI NATIVE */}
+      {/* --- ANIMAZIONI CSS DIRETTE --- */}
       <style>{`
-        @keyframes travel {
-          from { transform: translateZ(0); opacity: 0; }
-          to { transform: translateZ(1000px); opacity: 1; }
+        @keyframes warp {
+          0% { transform: translateZ(-500px); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: translateZ(500px); opacity: 0; }
         }
-        .star {
-          position: absolute;
-          background: white;
-          border-radius: 50%;
-          box-shadow: 0 0 10px #00d4ff;
-          animation: travel 4s infinite linear;
-        }
-        .outline-text {
+        
+        .stroke-text {
           color: transparent;
-          -webkit-text-stroke: 1px rgba(255,255,255,0.5);
+          -webkit-text-stroke: 1px rgba(255,255,255,0.6);
         }
-        .reveal {
-          animation: fadeIn 1.5s ease-out;
+
+        .fade-in {
+          animation: fadeIn 2s ease-out;
         }
+
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card:hover {
+          transform: translateY(-10px) scale(1.02);
+          border-color: #00d4ff !important;
+          background: rgba(0, 212, 255, 0.05) !important;
+          transition: all 0.3s ease;
         }
       `}</style>
     </div>
@@ -107,23 +118,97 @@ export default function App() {
 }
 
 const s = {
-  page: { background: '#02040a', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif' },
-  spaceContainer: { position: 'fixed', inset: 0, zIndex: 0, perspective: '500px', overflow: 'hidden' },
-  content: { position: 'relative', zIndex: 1, padding: '0 5%' },
-  nav: { display: 'flex', justifyContent: 'space-between', padding: '40px 0', alignItems: 'center' },
-  logo: { fontSize: '1.8rem', fontWeight: '900', letterSpacing: '-1px' },
-  navBtn: { background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '8px 20px', borderRadius: '5px', cursor: 'pointer' },
-  hero: { minHeight: '90vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' },
-  badge: { background: 'rgba(0,212,255,0.1)', color: '#00d4ff', padding: '10px 20px', borderRadius: '50px', fontSize: '0.9rem', marginBottom: '20px', border: '1px solid #00d4ff' },
-  mainTitle: { fontSize: 'clamp(3rem, 10vw, 7rem)', fontWeight: '900', lineHeight: '0.9', margin: '20px 0' },
-  gradientText: { background: 'linear-gradient(90deg, #fff, #00d4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
-  heroSub: { fontSize: '1.2rem', color: '#888', maxWidth: '600px', margin: '0 auto 40px' },
-  btnGroup: { display: 'flex', gap: '20px' },
-  primaryBtn: { background: '#fff', color: '#000', border: 'none', padding: '18px 40px', fontSize: '1.1rem', fontWeight: 'bold', borderRadius: '50px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' },
-  secondaryBtn: { background: 'transparent', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '18px 40px', borderRadius: '50px', cursor: 'pointer' },
-  section: { padding: '150px 0' },
-  sectionTitle: { fontSize: '3rem', textAlign: 'center', marginBottom: '80px' },
-  grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' },
-  card: { background: 'rgba(255,255,255,0.02)', padding: '50px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' },
-  ctaBox: { background: 'linear-gradient(180deg, rgba(0,212,255,0.1) 0%, transparent 100%)', padding: '100px 50px', borderRadius: '50px', textAlign: 'center', border: '1px solid rgba(0,212,255,0.2)', display: 'grid', gap: '30px' }
+  page: { 
+    background: '#010205', 
+    color: '#fff', 
+    minHeight: '200vh', // Lungo per scrollare
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    margin: 0,
+    overflowX: 'hidden'
+  },
+  spaceContainer: { 
+    position: 'fixed', 
+    inset: 0, 
+    zIndex: 0, 
+    perspective: '800px', // Questo crea l'effetto 3D
+    background: 'radial-gradient(circle at center, #0a1020 0%, #010205 100%)'
+  },
+  content: { 
+    position: 'relative', 
+    zIndex: 1, 
+    width: 'min(1200px, 90%)', 
+    margin: '0 auto' 
+  },
+  nav: { 
+    display: 'flex', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    padding: '40px 0' 
+  },
+  logo: { fontSize: '1.5rem', fontWeight: '900' },
+  hero: { 
+    minHeight: '80vh', 
+    display: 'flex', 
+    flexDirection: 'column', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    textAlign: 'center' 
+  },
+  badge: { 
+    background: 'rgba(0,212,255,0.1)', 
+    border: '1px solid rgba(0,212,255,0.3)', 
+    padding: '8px 20px', 
+    borderRadius: '100px', 
+    color: '#00d4ff', 
+    fontSize: '0.9rem', 
+    marginBottom: '30px' 
+  },
+  mainTitle: { 
+    fontSize: 'clamp(3rem, 12vw, 8rem)', 
+    fontWeight: '950', 
+    lineHeight: '0.9', 
+    margin: 0,
+    letterSpacing: '-0.04em'
+  },
+  gradientText: { 
+    background: 'linear-gradient(to right, #fff, #00d4ff)', 
+    WebkitBackgroundClip: 'text', 
+    WebkitTextFillColor: 'transparent' 
+  },
+  heroSub: { 
+    fontSize: '1.2rem', 
+    color: '#888', 
+    maxWidth: '600px', 
+    marginTop: '30px',
+    lineHeight: '1.6'
+  },
+  primaryBtn: {
+    marginTop: '40px',
+    background: '#fff',
+    color: '#000',
+    border: 'none',
+    padding: '20px 50px',
+    fontSize: '1.1rem',
+    fontWeight: 'bold',
+    borderRadius: '100px',
+    cursor: 'pointer',
+    boxShadow: '0 0 30px rgba(255,255,255,0.2)'
+  },
+  gridSection: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '20px',
+    padding: '100px 0'
+  },
+  card: {
+    background: 'rgba(255,255,255,0.02)',
+    border: '1px solid rgba(255,255,255,0.05)',
+    padding: '40px',
+    borderRadius: '24px',
+    textAlign: 'left'
+  },
+  iconBlue: {
+    fontSize: '2rem',
+    marginBottom: '20px'
+  }
 };
