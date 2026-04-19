@@ -4,7 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import { ClerkProvider } from '@clerk/clerk-react'
 
-// Usiamo direttamente la tua chiave qui per testare se è quello il problema
+// La tua chiave reale copiata dagli screenshot
 const PUBLISHABLE_KEY = "pk_test_Y3VyaW91cy1yYXtNi5jbGVyay5hYzI$"
 
 ReactDOM.createRoot(document.getElementById('root')).render(
