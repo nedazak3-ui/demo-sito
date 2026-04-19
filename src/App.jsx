@@ -1,139 +1,161 @@
 import React, { useState, useEffect } from "react";
 
-const useMousePerspective = () => {
-  const [perspective, setPerspective] = useState({ x: 0, y: 0 });
+const useMouse = () => {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      const x = (e.clientX / window.innerWidth) * 2 - 1;
-      const y = (e.clientY / window.innerHeight) * 2 - 1;
-      setPerspective({ x, y });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    const handle = (e) => setPos({
+      x: (e.clientX / window.innerWidth - 0.5) * 2,
+      y: (e.clientY / window.innerHeight - 0.5) * 2
+    });
+    window.addEventListener("mousemove", handle);
+    return () => window.removeEventListener("mousemove", handle);
   }, []);
-  return perspective;
+  return pos;
 };
 
 export default function App() {
-  const mouse = useMousePerspective();
-  const particles = Array.from({ length: 100 }).map((_, i) => ({
-    id: i,
-    top: `${Math.random() * 100}%`,
-    left: `${Math.random() * 100}%`,
-    size: `${Math.random() * 2 + 1}px`,
-    depth: Math.random() * 3 + 1,
-  }));
+  const mouse = useMouse();
 
   return (
     <div style={s.page}>
-      {/* SFONDO DINAMICO: GRADIENTE PROFONDO */}
-      <div style={s.backgroundOverlay}></div>
-
-      {/* PARTICELLE REATTIVE */}
-      <div style={s.spaceContainer}>
-        {particles.map((p) => (
-          <div key={p.id} style={{
-            ...s.particle,
-            top: p.top,
-            left: p.left,
-            width: p.size,
-            height: p.size,
-            transform: `translate(${mouse.x * 15 * p.depth}px, ${mouse.y * 15 * p.depth}px)`,
-          }} />
-        ))}
-      </div>
+      {/* SFONDO ATMOSFERICO: Nebulosa di luce soffusa */}
+      <div style={s.ambience}></div>
 
       <div style={s.content}>
-        {/* --- SEZIONE 1: HERO --- */}
+        {/* HERO ARTISTICA */}
         <section style={s.hero}>
-          <div style={s.badge}>🚀 WebCraft Engine v2.0</div>
-          
-          <div className="scene" style={s.scene}>
-            <div className="cube" style={{
-              ...s.cube,
-              transform: `rotateX(${-mouse.y * 35}deg) rotateY(${mouse.x * 35}deg)`,
+          <div style={s.sculptureContainer}>
+            {/* LOGO 3D VOLUMETRICO (Testo che diventa oggetto) */}
+            <div className="art-3d" style={{
+              ...s.artObject,
+              transform: `rotateX(${10 + mouse.y * 20}deg) rotateY(${mouse.x * 25}deg)`
             }}>
-              <div className="face front">CODE</div>
-              <div className="face back">FUTURE</div>
-              <div className="face right">DESIGN</div>
-              <div className="face left">IMPACT</div>
-              <div className="face top">3D</div>
-              <div className="face bottom">HTML</div>
+              <div className="text-3d-layer" data-text="CRAFT">CRAFT</div>
+              <div className="text-3d-layer" data-text="CRAFT" style={{transform: 'translateZ(-20px)', opacity: 0.5}}>CRAFT</div>
+              <div className="text-3d-layer" data-text="CRAFT" style={{transform: 'translateZ(-40px)', opacity: 0.2}}>CRAFT</div>
+              
+              {/* Elementi geometrici orbitanti */}
+              <div className="ring-art"></div>
+              <div className="floating-sphere"></div>
             </div>
+            
+            {/* Ombra dinamica soft */}
+            <div style={{
+              ...s.floorShadow,
+              transform: `translateX(${mouse.x * 50}px) scale(${1 - Math.abs(mouse.y) * 0.1})`
+            }}></div>
           </div>
 
-          <h1 style={{ ...s.mainTitle, transform: `perspective(1000px) rotateX(${mouse.y * -5}deg) rotateY(${mouse.x * 5}deg)` }}>
-            ESPERIENZE <br />
-            <span className="stroke-text">IMMERSIVE</span> <br />
-            <span style={s.cyanText}>SENZA LIMITI.</span>
-          </h1>
-          <p style={s.heroSub}>Ingegneria estetica e performance brutali unite in un unico ecosistema digitale.</p>
-        </section>
-
-        {/* --- SEZIONE 2: I SERVIZI (BENTO GRID) --- */}
-        <section style={s.section}>
-          <h2 style={s.sectionTitle}>I NOSTRI PILASTRI</h2>
-          <div style={s.grid}>
-            <div className="feature-card" style={s.card}>
-              <div style={s.icon}>⚡</div>
-              <h3>Velocità Pura</h3>
-              <p>Caricamenti istantanei ottimizzati per ogni dispositivo.</p>
-            </div>
-            <div className="feature-card" style={s.card}>
-              <div style={s.icon}>💎</div>
-              <h3>Design Premium</h3>
-              <p>Interfacce curate nei minimi dettagli per massimizzare l'impatto.</p>
-            </div>
-            <div className="feature-card" style={s.card}>
-              <div style={s.icon}>🌐</div>
-              <h3>Core 3D</h3>
-              <p>Integrazione di elementi tridimensionali interattivi di ultima generazione.</p>
-            </div>
+          <div style={s.textContent}>
+            <h1 style={s.mainTitle}>
+              THE ART OF <br />
+              <span className="glass-text">DIMENSION</span>
+            </h1>
+            <p style={s.artistSub}>
+              "La perfezione non è quando non c'è più nulla da aggiungere, ma quando non c'è più nulla da togliere."
+            </p>
           </div>
         </section>
 
-        {/* --- SEZIONE 3: CTA FINALE --- */}
+        {/* SEZIONE ESPOSITIVA (MOLTO LUNGA) */}
+        <section style={s.gallerySection}>
+          <div className="art-card" style={s.artCard}>
+            <span style={s.cardNum}>VOL. 01</span>
+            <h3>SCULTURA DIGITALE</h3>
+            <p>Codice trasformato in materia tangibile attraverso il rendering GPU.</p>
+          </div>
+
+          <div className="art-card" style={{...s.artCard, alignSelf: 'flex-end'}}>
+            <span style={s.cardNum}>VOL. 02</span>
+            <h3>LUCE REALE</h3>
+            <p>Simulazione fotorealistica di riflessi su superfici metalliche e vitree.</p>
+          </div>
+        </section>
+
         <section style={s.ctaSection}>
-          <div style={s.ctaBox}>
-            <h2 style={{fontSize: '3rem', marginBottom: '20px'}}>PRONTO AL DECOLLO?</h2>
-            <p style={{marginBottom: '40px', opacity: 0.7}}>Inizia oggi a costruire il tuo futuro digitale con noi.</p>
-            <button style={s.btn}>CONTATTACI ORA</button>
-          </div>
+          <button className="art-btn">ENTRA NEL FUTURO</button>
         </section>
 
-        <footer style={s.footer}>
-          © 2026 WEBCRAFT STUDIO • DESIGNED FOR EXCELLENCE
-        </footer>
+        <footer style={s.footer}>EST. 2026 // WEBCRAFT FINE ART</footer>
       </div>
 
       <style>{`
-        .scene { transform-style: preserve-3d; }
-        .cube { transform-style: preserve-3d; animation: rotateAuto 20s infinite linear; transition: transform 0.1s ease-out; }
-        .face {
-          position: absolute; width: 200px; height: 200px;
-          border: 2px solid #00d4ff; background: rgba(0, 212, 255, 0.1);
-          display: flex; align-items: center; justify-content: center;
-          font-weight: 900; color: #00d4ff; backdrop-filter: blur(5px);
-          box-shadow: inset 0 0 20px rgba(0, 212, 255, 0.2);
-        }
-        .front { transform: rotateY(0deg) translateZ(100px); }
-        .back { transform: rotateY(180deg) translateZ(100px); }
-        .right { transform: rotateY(90deg) translateZ(100px); }
-        .left { transform: rotateY(-90deg) translateZ(100px); }
-        .top { transform: rotateX(90deg) translateZ(100px); }
-        .bottom { transform: rotateX(-90deg) translateZ(100px); }
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,900;1,900&family=Inter:wght@300;900&display=swap');
 
-        @keyframes rotateAuto {
-          from { transform: rotateX(0deg) rotateY(0deg); }
-          to { transform: rotateX(360deg) rotateY(360deg); }
+        .art-3d {
+          position: relative;
+          transform-style: preserve-3d;
+          width: 400px;
+          height: 150px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.2s cubic-bezier(0.1, 0, 0.1, 1);
         }
 
-        .stroke-text { color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,0.6); }
-        
-        .feature-card:hover {
-          border-color: #00d4ff;
-          background: rgba(0, 212, 255, 0.05);
-          transform: translateY(-10px);
+        .text-3d-layer {
+          position: absolute;
+          font-family: 'Bodoni Moda', serif;
+          font-size: 8rem;
+          font-weight: 900;
+          color: #fff;
+          letter-spacing: -5px;
+          text-shadow: 0 0 20px rgba(0,212,255,0.3);
+        }
+
+        .ring-art {
+          position: absolute;
+          width: 500px;
+          height: 500px;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 50%;
+          transform: rotateX(80deg);
+          animation: spin 10s infinite linear;
+        }
+
+        .floating-sphere {
+          position: absolute;
+          width: 30px;
+          height: 30px;
+          background: #00d4ff;
+          border-radius: 50%;
+          box-shadow: 0 0 50px #00d4ff;
+          offset-path: path('M 0,0 m -150,0 a 150,150 0 1,0 300,0 a 150,150 0 1,0 -300,0');
+          animation: orbit 5s infinite linear;
+        }
+
+        @keyframes spin { from { transform: rotateX(80deg) rotateZ(0); } to { transform: rotateX(80deg) rotateZ(360deg); } }
+        @keyframes orbit { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+
+        .glass-text {
+          color: transparent;
+          -webkit-text-stroke: 1px rgba(255,255,255,0.8);
+          font-style: italic;
+        }
+
+        .art-btn {
+          background: #fff;
+          color: #000;
+          border: none;
+          padding: 30px 80px;
+          font-family: 'Inter', sans-serif;
+          font-weight: 900;
+          font-size: 1rem;
+          letter-spacing: 5px;
+          cursor: pointer;
+          transition: 0.5s;
+          mix-blend-mode: screen;
+        }
+
+        .art-btn:hover {
+          background: #00d4ff;
+          box-shadow: 0 0 100px rgba(0,212,255,0.5);
+          letter-spacing: 10px;
+        }
+
+        .art-card:hover {
+          background: rgba(255,255,255,0.05);
+          border-color: #fff;
         }
       `}</style>
     </div>
@@ -141,28 +163,28 @@ export default function App() {
 }
 
 const s = {
-  page: { background: '#02040a', color: '#fff', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif', margin: 0, overflowX: 'hidden' },
-  backgroundOverlay: { 
+  page: { background: '#080808', color: '#fff', minHeight: '400vh', fontFamily: "'Inter', sans-serif", margin: 0, overflowX: 'hidden' },
+  ambience: { 
     position: 'fixed', inset: 0, zIndex: 0,
-    background: 'radial-gradient(circle at 50% 50%, #0a192f 0%, #02040a 100%)' 
+    background: 'radial-gradient(circle at 50% 40%, #1a1a1a 0%, #080808 70%)'
   },
-  spaceContainer: { position: 'fixed', inset: 0, zIndex: 1, pointerEvents: 'none' },
-  particle: { position: 'absolute', background: '#fff', borderRadius: '50%', opacity: 0.4, boxShadow: '0 0 8px #00d4ff' },
-  content: { position: 'relative', zIndex: 2, width: 'min(1200px, 90%)', margin: '0 auto' },
-  hero: { height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' },
-  badge: { background: 'rgba(0,212,255,0.1)', color: '#00d4ff', padding: '8px 20px', borderRadius: '50px', border: '1px solid #00d4ff', marginBottom: '30px', fontWeight: 'bold' },
-  scene: { width: '200px', height: '200px', marginBottom: '80px' },
-  cube: { width: '100%', height: '100%', position: 'relative' },
-  mainTitle: { fontSize: 'clamp(2.5rem, 8vw, 6rem)', fontWeight: '900', lineHeight: '0.9', marginBottom: '30px' },
-  cyanText: { background: 'linear-gradient(90deg, #fff, #00d4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
-  heroSub: { fontSize: '1.2rem', color: '#8892b0', maxWidth: '600px' },
-  section: { padding: '100px 0' },
-  sectionTitle: { fontSize: '3rem', textAlign: 'center', marginBottom: '60px', fontWeight: '900' },
-  grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' },
-  card: { padding: '40px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '20px', transition: '0.3s' },
-  icon: { fontSize: '2.5rem', marginBottom: '20px' },
-  ctaSection: { padding: '150px 0', textAlign: 'center' },
-  ctaBox: { padding: '80px', background: 'rgba(0,212,255,0.05)', borderRadius: '40px', border: '1px solid #00d4ff' },
-  btn: { background: '#fff', color: '#000', padding: '18px 45px', borderRadius: '50px', fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: '1.1rem' },
-  footer: { padding: '50px 0', textAlign: 'center', opacity: 0.3 }
+  content: { position: 'relative', zIndex: 10, width: '90%', maxWidth: '1400px', margin: '0 auto' },
+  hero: { height: '110vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
+  sculptureContainer: { position: 'relative', height: '400px', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', perspective: '1500px' },
+  floorShadow: { 
+    position: 'absolute', bottom: '-50px', width: '400px', height: '40px', 
+    background: 'radial-gradient(ellipse at center, rgba(0,212,255,0.15) 0%, transparent 80%)',
+    filter: 'blur(15px)', transition: '0.2s ease-out'
+  },
+  textContent: { textAlign: 'center', marginTop: '50px' },
+  mainTitle: { fontSize: 'clamp(3rem, 12vw, 9rem)', fontWeight: 900, lineHeight: 0.8, margin: 0 },
+  artistSub: { fontSize: '0.9rem', letterSpacing: '3px', color: '#555', marginTop: '30px', textTransform: 'uppercase' },
+  gallerySection: { padding: '200px 0', display: 'flex', flexDirection: 'column', gap: '200px' },
+  artCard: { 
+    width: 'min(500px, 100%)', padding: '60px', border: '1px solid rgba(255,255,255,0.05)', 
+    background: 'rgba(255,255,255,0.01)', transition: '0.6s' 
+  },
+  cardNum: { fontSize: '0.7rem', opacity: 0.3, letterSpacing: '5px' },
+  ctaSection: { height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' },
+  footer: { padding: '100px 0', textAlign: 'center', fontSize: '0.6rem', opacity: 0.2, letterSpacing: '10px' }
 };
