@@ -1,73 +1,58 @@
 import React, { useState, useEffect } from "react";
 
-// Hook per tracciare il mouse e creare l'effetto parallasse
 const useMousePerspective = () => {
   const [perspective, setPerspective] = useState({ x: 0, y: 0 });
-
   useEffect(() => {
     const handleMouseMove = (e) => {
-      // Calcoliamo la posizione del mouse rispetto al centro dello schermo (valori da -1 a 1)
       const x = (e.clientX / window.innerWidth) * 2 - 1;
       const y = (e.clientY / window.innerHeight) * 2 - 1;
       setPerspective({ x, y });
     };
-
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
-
   return perspective;
 };
 
 export default function App() {
   const mouse = useMousePerspective();
-
-  // Generiamo 80 particelle di sfondo con posizioni casuali
-  const particles = Array.from({ length: 80 }).map((_, i) => ({
+  const particles = Array.from({ length: 100 }).map((_, i) => ({
     id: i,
     top: `${Math.random() * 100}%`,
     left: `${Math.random() * 100}%`,
-    size: `${Math.random() * 3}px`,
-    depth: Math.random() * 2 + 0.5, // Velocità di parallasse diversa per ogni particella
+    size: `${Math.random() * 2 + 1}px`,
+    depth: Math.random() * 3 + 1,
   }));
 
   return (
     <div style={s.page}>
-      {/* --- SFONDO PARTICELLE REATTIVE --- */}
+      {/* SFONDO DINAMICO: GRADIENTE PROFONDO */}
+      <div style={s.backgroundOverlay}></div>
+
+      {/* PARTICELLE REATTIVE */}
       <div style={s.spaceContainer}>
         {particles.map((p) => (
-          <div
-            key={p.id}
-            style={{
-              ...s.particle,
-              top: p.top,
-              left: p.left,
-              width: p.size,
-              height: p.size,
-              // Spostiamo le particelle in base al mouse, usando la loro "profondità"
-              transform: `translate(${mouse.x * 20 * p.depth}px, ${mouse.y * 20 * p.depth}px)`,
-            }}
-          />
+          <div key={p.id} style={{
+            ...s.particle,
+            top: p.top,
+            left: p.left,
+            width: p.size,
+            height: p.size,
+            transform: `translate(${mouse.x * 15 * p.depth}px, ${mouse.y * 15 * p.depth}px)`,
+          }} />
         ))}
       </div>
 
       <div style={s.content}>
-        {/* --- HERO SECTION --- */}
+        {/* --- SEZIONE 1: HERO --- */}
         <section style={s.hero}>
-          <div style={s.badge}>
-            🚀 Web Design pensato solo per la qualità del servizio
-          </div>
-
-          {/* --- IL CUBO 3D MAGNETICO (SEGUE IL MOUSE) --- */}
+          <div style={s.badge}>🚀 WebCraft Engine v2.0</div>
+          
           <div className="scene" style={s.scene}>
-            <div
-              className="cube"
-              style={{
-                ...s.cube,
-                // Applichiamo la rotazione automatica + l'inclinazione del mouse
-                transform: `rotateX(${-mouse.y * 30}deg) rotateY(${mouse.x * 30}deg) rotateZ(0deg)`,
-              }}
-            >
+            <div className="cube" style={{
+              ...s.cube,
+              transform: `rotateX(${-mouse.y * 35}deg) rotateY(${mouse.x * 35}deg)`,
+            }}>
               <div className="face front">CODE</div>
               <div className="face back">FUTURE</div>
               <div className="face right">DESIGN</div>
@@ -77,72 +62,78 @@ export default function App() {
             </div>
           </div>
 
-          {/* --- TITOLO DINAMICO (SEGUE IL MOUSE) --- */}
-          <h1
-            style={{
-              ...s.mainTitle,
-              // Il titolo si inclina leggermente per dare profondità
-              transform: `perspective(1000px) rotateX(${mouse.y * -5}deg) rotateY(${mouse.x * 5}deg)`,
-            }}
-          >
+          <h1 style={{ ...s.mainTitle, transform: `perspective(1000px) rotateX(${mouse.y * -5}deg) rotateY(${mouse.x * 5}deg)` }}>
             ESPERIENZE <br />
             <span className="stroke-text">IMMERSIVE</span> <br />
             <span style={s.cyanText}>SENZA LIMITI.</span>
           </h1>
-
-          <p style={s.heroSub}>
-            Non è solo un sito. È una macchina da guerra digitale progettata
-            con ingegneria estetica e performance brutali.
-          </p>
+          <p style={s.heroSub}>Ingegneria estetica e performance brutali unite in un unico ecosistema digitale.</p>
         </section>
+
+        {/* --- SEZIONE 2: I SERVIZI (BENTO GRID) --- */}
+        <section style={s.section}>
+          <h2 style={s.sectionTitle}>I NOSTRI PILASTRI</h2>
+          <div style={s.grid}>
+            <div className="feature-card" style={s.card}>
+              <div style={s.icon}>⚡</div>
+              <h3>Velocità Pura</h3>
+              <p>Caricamenti istantanei ottimizzati per ogni dispositivo.</p>
+            </div>
+            <div className="feature-card" style={s.card}>
+              <div style={s.icon}>💎</div>
+              <h3>Design Premium</h3>
+              <p>Interfacce curate nei minimi dettagli per massimizzare l'impatto.</p>
+            </div>
+            <div className="feature-card" style={s.card}>
+              <div style={s.icon}>🌐</div>
+              <h3>Core 3D</h3>
+              <p>Integrazione di elementi tridimensionali interattivi di ultima generazione.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* --- SEZIONE 3: CTA FINALE --- */}
+        <section style={s.ctaSection}>
+          <div style={s.ctaBox}>
+            <h2 style={{fontSize: '3rem', marginBottom: '20px'}}>PRONTO AL DECOLLO?</h2>
+            <p style={{marginBottom: '40px', opacity: 0.7}}>Inizia oggi a costruire il tuo futuro digitale con noi.</p>
+            <button style={s.btn}>CONTATTACI ORA</button>
+          </div>
+        </section>
+
+        <footer style={s.footer}>
+          © 2026 WEBCRAFT STUDIO • DESIGNED FOR EXCELLENCE
+        </footer>
       </div>
 
-      {/* --- CSS ENGINE PER GLI EFFETTI 3D --- */}
       <style>{`
-        /* Definizione delle facce del cubo (come nel tuo screenshot) */
         .scene { transform-style: preserve-3d; }
-        .cube {
-          transform-style: preserve-3d;
-          /* Rimuoviamo l'animazione automatica per controllarla col mouse,
-             oppure la lasciamo se vuoi che giri SEMPRE ma si inclini col mouse.
-             Proviamo a lasciarla per ora: */
-          animation: rotateCube 20s infinite linear;
-        }
+        .cube { transform-style: preserve-3d; animation: rotateAuto 20s infinite linear; transition: transform 0.1s ease-out; }
         .face {
-          position: absolute;
-          width: 200px;
-          height: 200px;
-          border: 2px solid #00d4ff;
-          background: rgba(0, 212, 255, 0.08);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 900;
-          font-size: 1.5rem;
-          color: #00d4ff;
-          backdrop-filter: blur(5px);
-          font-family: sans-serif;
-          letter-spacing: 2px;
+          position: absolute; width: 200px; height: 200px;
+          border: 2px solid #00d4ff; background: rgba(0, 212, 255, 0.1);
+          display: flex; align-items: center; justify-content: center;
+          font-weight: 900; color: #00d4ff; backdrop-filter: blur(5px);
+          box-shadow: inset 0 0 20px rgba(0, 212, 255, 0.2);
         }
-
-        /* Posizionamento delle facce nello spazio 3D */
-        .front  { transform: rotateY(0deg) translateZ(100px); }
-        .back   { transform: rotateY(180deg) translateZ(100px); }
-        .right  { transform: rotateY(90deg) translateZ(100px); }
-        .left   { transform: rotateY(-90deg) translateZ(100px); }
-        .top    { transform: rotateX(90deg) translateZ(100px); }
+        .front { transform: rotateY(0deg) translateZ(100px); }
+        .back { transform: rotateY(180deg) translateZ(100px); }
+        .right { transform: rotateY(90deg) translateZ(100px); }
+        .left { transform: rotateY(-90deg) translateZ(100px); }
+        .top { transform: rotateX(90deg) translateZ(100px); }
         .bottom { transform: rotateX(-90deg) translateZ(100px); }
 
-        /* Animazione di rotazione automatica di base */
-        @keyframes rotateCube {
-          from { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-          to { transform: rotateX(360deg) rotateY(360deg) rotateZ(0deg); }
+        @keyframes rotateAuto {
+          from { transform: rotateX(0deg) rotateY(0deg); }
+          to { transform: rotateX(360deg) rotateY(360deg); }
         }
 
-        /* Effetto testo outline per "IMMERSIVE" */
-        .stroke-text {
-          color: transparent;
-          -webkit-text-stroke: 1.5px rgba(255,255,255,0.6);
+        .stroke-text { color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,0.6); }
+        
+        .feature-card:hover {
+          border-color: #00d4ff;
+          background: rgba(0, 212, 255, 0.05);
+          transform: translateY(-10px);
         }
       `}</style>
     </div>
@@ -150,15 +141,28 @@ export default function App() {
 }
 
 const s = {
-  page: { background: '#000', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif', overflowX: 'hidden', margin: 0 },
-  spaceContainer: { position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden' },
-  particle: { position: 'absolute', background: '#fff', borderRadius: '50%', opacity: 0.3, boxShadow: '0 0 10px #00d4ff', transition: 'transform 0.1s ease-out' },
+  page: { background: '#02040a', color: '#fff', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif', margin: 0, overflowX: 'hidden' },
+  backgroundOverlay: { 
+    position: 'fixed', inset: 0, zIndex: 0,
+    background: 'radial-gradient(circle at 50% 50%, #0a192f 0%, #02040a 100%)' 
+  },
+  spaceContainer: { position: 'fixed', inset: 0, zIndex: 1, pointerEvents: 'none' },
+  particle: { position: 'absolute', background: '#fff', borderRadius: '50%', opacity: 0.4, boxShadow: '0 0 8px #00d4ff' },
   content: { position: 'relative', zIndex: 2, width: 'min(1200px, 90%)', margin: '0 auto' },
-  hero: { minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', perspective: '1000px' },
-  badge: { background: 'rgba(0,212,255,0.1)', color: '#00d4ff', padding: '10px 25px', borderRadius: '50px', border: '1px solid #00d4ff', marginBottom: '40px', fontWeight: 'bold', fontSize: '0.9rem' },
-  scene: { width: '200px', height: '200px', margin: '0 auto 60px auto', perspective: '1000px' },
-  cube: { width: '100%', height: '100%', position: 'relative', transition: 'transform 0.1s ease-out' },
-  mainTitle: { fontSize: 'clamp(3rem, 10vw, 8rem)', fontWeight: '900', lineHeight: '0.85', marginBottom: '30px', letterSpacing: '-0.04em', transition: 'transform 0.1s ease-out' },
-  cyanText: { background: 'linear-gradient(to right, #fff, #00d4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
-  heroSub: { fontSize: '1.3rem', color: '#888', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }
+  hero: { height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' },
+  badge: { background: 'rgba(0,212,255,0.1)', color: '#00d4ff', padding: '8px 20px', borderRadius: '50px', border: '1px solid #00d4ff', marginBottom: '30px', fontWeight: 'bold' },
+  scene: { width: '200px', height: '200px', marginBottom: '80px' },
+  cube: { width: '100%', height: '100%', position: 'relative' },
+  mainTitle: { fontSize: 'clamp(2.5rem, 8vw, 6rem)', fontWeight: '900', lineHeight: '0.9', marginBottom: '30px' },
+  cyanText: { background: 'linear-gradient(90deg, #fff, #00d4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
+  heroSub: { fontSize: '1.2rem', color: '#8892b0', maxWidth: '600px' },
+  section: { padding: '100px 0' },
+  sectionTitle: { fontSize: '3rem', textAlign: 'center', marginBottom: '60px', fontWeight: '900' },
+  grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' },
+  card: { padding: '40px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '20px', transition: '0.3s' },
+  icon: { fontSize: '2.5rem', marginBottom: '20px' },
+  ctaSection: { padding: '150px 0', textAlign: 'center' },
+  ctaBox: { padding: '80px', background: 'rgba(0,212,255,0.05)', borderRadius: '40px', border: '1px solid #00d4ff' },
+  btn: { background: '#fff', color: '#000', padding: '18px 45px', borderRadius: '50px', fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: '1.1rem' },
+  footer: { padding: '50px 0', textAlign: 'center', opacity: 0.3 }
 };
