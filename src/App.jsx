@@ -175,7 +175,7 @@ export default function WebCraftPro() {
                 fontWeight: 600
               }}
             >
-              🚀 Web Design Freelance di Prossima Generazione
+              🚀 Web Design pensato solo per la qualità del servizio
             </motion.div>
 
             <motion.h1 
