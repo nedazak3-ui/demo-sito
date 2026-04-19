@@ -2,7 +2,8 @@ import React from "react";
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/clerk-react";
 
 export default function App() {
-  const stars = Array.from({ length: 100 }).map((_, i) => ({
+  // Generatore di stelle
+  const stars = Array.from({ length: 120 }).map((_, i) => ({
     id: i,
     top: `${Math.random() * 100}%`,
     left: `${Math.random() * 100}%`,
@@ -32,7 +33,7 @@ export default function App() {
         </div>
       </nav>
 
-      {/* SFONDO STELLE */}
+      {/* SFONDO ANIMATO */}
       <div style={s.spaceContainer}>
         {stars.map((star) => (
           <div key={star.id} className="starburst" style={{
@@ -63,34 +64,47 @@ export default function App() {
             </div>
           </div>
           <h1 style={s.mainTitle}>SOLUZIONI <br /><span className="stroke-text">IMMERSIVE</span></h1>
+          <p style={s.subtitle}>Web Design di nuova generazione per business che guardano al futuro.</p>
           <button style={s.primaryBtn} onClick={() => document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})}>
-            SCOPRI I PIANI
+            VEDI I PIANI DI SERVIZIO
           </button>
         </section>
 
-        {/* PIANI DI ABBONAMENTO */}
+        {/* PIANI DI SERVIZIO */}
         <section id="pricing" style={s.section}>
-          <h2 style={s.secTitle}>PIANI <span className="stroke-text">DISPONIBILI</span></h2>
+          <h2 style={s.secTitle}>SCEGLI IL TUO <span className="stroke-text">PIANO</span></h2>
           <div style={s.bentoGrid}>
             <div className="glass-card" style={s.bentoItem}>
-              <h3>STARTER</h3>
+              <h3 style={s.planName}>STARTER</h3>
               <div style={s.price}>€499</div>
-              <button style={s.planBtn}>ACQUISTA</button>
+              <ul style={s.list}>
+                <li>Landing Page Professionale</li>
+                <li>Design Reattivo</li>
+                <li>Supporto Email</li>
+              </ul>
+              <button style={s.planBtn}>INIZIA ORA</button>
             </div>
-            <div className="glass-card" style={{...s.bentoItem, borderColor: '#00d4ff'}}>
-              <h3 style={{color: '#00d4ff'}}>BUSINESS PRO</h3>
+            
+            <div className="glass-card" style={{...s.bentoItem, borderColor: '#00d4ff', transform: 'scale(1.05)'}}>
+              <h3 style={{...s.planName, color: '#00d4ff'}}>BUSINESS PRO</h3>
               <div style={s.price}>€1.299</div>
-              <button style={{...s.planBtn, background: '#00d4ff', color: '#000'}}>ACQUISTA</button>
+              <ul style={s.list}>
+                <li>Sito Multi-pagina</li>
+                <li>Integrazione Pagamenti</li>
+                <li>Dashboard Clienti</li>
+              </ul>
+              <button style={{...s.planBtn, background: '#00d4ff', color: '#000'}}>SCEGLI PRO</button>
             </div>
           </div>
         </section>
       </div>
 
+      {/* CSS ANIMAZIONI */}
       <style>{`
         body { margin: 0; background: #000; overflow-x: hidden; }
-        .scene { width: 180px; height: 180px; perspective: 600px; margin: 20px auto; }
-        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: rotateCube 20s infinite linear; }
-        .face { position: absolute; width: 180px; height: 180px; border: 2px solid #00d4ff; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center; font-weight: bold; color: #00d4ff; backdrop-filter: blur(5px); }
+        .scene { width: 180px; height: 180px; perspective: 600px; margin: 0 auto 40px; }
+        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: rotateCube 15s infinite linear; }
+        .face { position: absolute; width: 180px; height: 180px; border: 2px solid #00d4ff; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center; font-weight: bold; color: #00d4ff; backdrop-filter: blur(5px); font-size: 1.2rem; }
         .front { transform: rotateY(0deg) translateZ(90px); }
         .back { transform: rotateY(180deg) translateZ(90px); }
         .right { transform: rotateY(90deg) translateZ(90px); }
@@ -100,7 +114,8 @@ export default function App() {
         @keyframes rotateCube { from { transform: rotateX(0deg) rotateY(0deg); } to { transform: rotateX(360deg) rotateY(360deg); } }
         @keyframes warp { 0% { transform: translateZ(-1000px); opacity: 0; } 100% { transform: translateZ(500px); opacity: 0; } }
         .stroke-text { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.5); }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; padding: 30px; transition: 0.3s; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px; padding: 40px; transition: 0.4s; }
+        .glass-card:hover { border-color: #00d4ff; background: rgba(0, 212, 255, 0.05); }
       `}</style>
     </div>
   );
@@ -108,20 +123,23 @@ export default function App() {
 
 const s = {
   page: { background: '#000', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif' },
-  nav: { position: 'fixed', top: 0, width: '100%', zIndex: 100, padding: '15px 0', background: 'rgba(0,0,0,0.8)', borderBottom: '1px solid rgba(255,255,255,0.1)' },
+  nav: { position: 'fixed', top: 0, width: '100%', zIndex: 100, padding: '20px 0', background: 'rgba(0,0,0,0.8)', borderBottom: '1px solid rgba(255,255,255,0.1)' },
   navContainer: { width: '90%', maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  logo: { fontWeight: '900', fontSize: '1.4rem', color: '#00d4ff' },
-  loginBtn: { background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontWeight: 'bold' },
-  registerBtn: { background: '#00d4ff', color: '#000', border: 'none', padding: '8px 20px', borderRadius: '50px', fontWeight: 'bold', cursor: 'pointer' },
+  logo: { fontWeight: '900', fontSize: '1.6rem', color: '#00d4ff', letterSpacing: '2px' },
+  loginBtn: { background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.9rem' },
+  registerBtn: { background: '#00d4ff', color: '#000', border: 'none', padding: '10px 25px', borderRadius: '50px', fontWeight: '900', cursor: 'pointer', transition: '0.3s' },
   spaceContainer: { position: 'fixed', inset: 0, zIndex: 0, perspective: '1000px' },
-  content: { position: 'relative', zIndex: 2, paddingTop: '80px' },
-  hero: { height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' },
-  mainTitle: { fontSize: 'clamp(2.5rem, 8vw, 6rem)', fontWeight: '900', margin: '20px 0' },
-  primaryBtn: { background: '#fff', color: '#000', border: 'none', padding: '18px 40px', fontSize: '1rem', fontWeight: 'bold', borderRadius: '50px', cursor: 'pointer', margin: '0 auto' },
-  section: { padding: '100px 5%' },
-  secTitle: { fontSize: '3rem', textAlign: 'center', marginBottom: '50px' },
-  bentoGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' },
+  content: { position: 'relative', zIndex: 2, paddingTop: '100px' },
+  hero: { height: '90vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' },
+  mainTitle: { fontSize: 'clamp(3rem, 10vw, 7rem)', fontWeight: '900', margin: '0', lineHeight: '0.9' },
+  subtitle: { fontSize: '1.2rem', opacity: 0.6, marginTop: '20px' },
+  primaryBtn: { background: '#fff', color: '#000', border: 'none', padding: '20px 50px', fontSize: '1.1rem', fontWeight: '900', borderRadius: '100px', cursor: 'pointer', marginTop: '40px', transition: '0.3s' },
+  section: { padding: '100px 5%', maxWidth: '1200px', margin: '0 auto' },
+  secTitle: { fontSize: '3rem', textAlign: 'center', marginBottom: '60px', fontWeight: '900' },
+  bentoGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px' },
   bentoItem: { display: 'flex', flexDirection: 'column', gap: '20px', textAlign: 'center' },
-  price: { fontSize: '2.5rem', fontWeight: 'bold' },
-  planBtn: { background: '#fff', color: '#000', border: 'none', padding: '12px', borderRadius: '15px', fontWeight: 'bold', cursor: 'pointer' }
+  planName: { fontSize: '1.8rem', fontWeight: '900', margin: '0' },
+  price: { fontSize: '3.5rem', fontWeight: 'bold', color: '#fff' },
+  list: { listStyle: 'none', padding: 0, margin: '20px 0', textAlign: 'center', opacity: 0.8, lineHeight: '2.5' },
+  planBtn: { background: '#fff', color: '#000', border: 'none', padding: '15px', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer', marginTop: 'auto' }
 };
